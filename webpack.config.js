@@ -240,6 +240,7 @@ function getDevServerConfig() {
             }
         },
         host: '127.0.0.1',
+        port: 8081,
         hot: true,
         proxy: {
             '/': {
@@ -251,7 +252,7 @@ function getDevServerConfig() {
                 }
             }
         },
-        server: process.env.CODESPACES ? 'http' : 'https',
+        server: process.env.CODESPACES ? 'http' : 'http',
         static: {
             directory: process.cwd()
         }

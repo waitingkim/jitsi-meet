@@ -400,7 +400,7 @@ class Prejoin extends Component<IProps, IState> {
                                 role = 'button'
                                 tabIndex = { 0 }
                                 testId = 'prejoin.joinMeeting'
-                                type = 'primary'>
+                                type = 'secondary'>
                                 { t('prejoin.joinMeeting') }
                             </ActionButton>
                         </Popover>

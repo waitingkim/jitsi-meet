@@ -212,6 +212,7 @@ function ActionButton({
             aria-disabled = { disabled }
             aria-label = { ariaLabel }
             className = { containerClasses }
+            style={{backgroundColor:'#D7A344', color:'#FFF'}}
             data-testid = { testId ? testId : undefined }
             onClick = { disabled ? undefined : onClick }
             onKeyPress = { onKeyPressHandler }
