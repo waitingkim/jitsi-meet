@@ -270,8 +270,12 @@ export function setConfigFromURLParams(
     //         "APP_NAME": "Jitsi Meet"
     //     }
     // }
+    console.log('==================================params ', params)
+    console.log('==================================interfaceConfig ', interfaceConfig)
+    interfaceConfig.APP_NAME = 'GLEP Meet'
     config && (json.config = {});
     interfaceConfig && (json.interfaceConfig = {});
+    console.log('==================================interfaceConfig ', json.interfaceConfig)
 
     for (const param of Object.keys(params)) {
         let base = json;

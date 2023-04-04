@@ -1,4 +1,4 @@
-# <p align="center">Jitsi Meet</p>
+# <p align="center">GLEP Meet</p>
 
 Jitsi Meet is a set of Open Source projects which empower users to use and deploy
 video conferencing platforms with state-of-the-art video quality and features.
@@ -25,9 +25,9 @@ Amongst others here are the main features Jitsi Meet offers:
 
 And many more!
 
-## Using Jitsi Meet
+## Using GLEP Meet
 
-Using Jitsi Meet is straightforward, as it's browser based. Head over to [meet.jit.si](https://meet.jit.si) and give it a try. It's anonymous, scalable and free to use. All browsers are supported! 
+Using Jitsi Meet is straightforward, as it's browser based. Head over to [meet.jit.si](https://meet.jit.si) and give it a try. It's anonymous, scalable and free to use. All browsers are supported!
 
 Using mobile? No problem, you can either use your mobile web browser or our fully-featured
 mobile apps:

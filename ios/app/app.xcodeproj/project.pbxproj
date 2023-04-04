@@ -381,8 +381,8 @@
 				0BEA5C401F7B8F73000D0AB4 /* PBXTargetDependency */,
 				4EB0602A260E026600F524C5 /* PBXTargetDependency */,
 			);
-			name = JitsiMeet;
-			productName = "Jitsi Meet";
+			name = GLEPMeet;
+			productName = "GLEP Meet";
 			productReference = 13B07F961A680F5B00A75B9A /* jitsi-meet.app */;
 			productType = "com.apple.product-type.application";
 		};

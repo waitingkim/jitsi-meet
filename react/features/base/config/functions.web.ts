@@ -92,29 +92,29 @@ export function _setDeeplinkingDefaults(deeplinking: IDeeplinkingConfig) {
         ios = {} as IDeeplinkingMobileConfig
     } = deeplinking;
 
-    desktop.appName = desktop.appName || 'Jitsi Meet';
+    desktop.appName = desktop.appName || 'GLEP Meet';
 
-    ios.appName = ios.appName || 'Jitsi Meet';
-    ios.appScheme = ios.appScheme || 'org.jitsi.meet';
+    ios.appName = ios.appName || 'GLEP Meet';
+    ios.appScheme = ios.appScheme || 'liveedu.meet.castis.io';
     ios.downloadLink = ios.downloadLink
-        || 'https://itunes.apple.com/us/app/jitsi-meet/id1165103905';
+        || 'https://liveedu.meet.castis.io';
     if (ios.dynamicLink) {
-        ios.dynamicLink.apn = ios.dynamicLink.apn || 'org.jitsi.meet';
+        ios.dynamicLink.apn = ios.dynamicLink.apn || 'liveedu.meet.castis.io';
         ios.dynamicLink.appCode = ios.dynamicLink.appCode || 'w2atb';
         ios.dynamicLink.ibi = ios.dynamicLink.ibi || 'com.atlassian.JitsiMeet.ios';
         ios.dynamicLink.isi = ios.dynamicLink.isi || '1165103905';
     }
 
-    android.appName = android.appName || 'Jitsi Meet';
-    android.appScheme = android.appScheme || 'org.jitsi.meet';
+    android.appName = android.appName || 'GLEP Meet';
+    android.appScheme = android.appScheme || 'liveedu.meet.castis.io';
     android.downloadLink = android.downloadLink
-        || 'https://play.google.com/store/apps/details?id=org.jitsi.meet';
-    android.appPackage = android.appPackage || 'org.jitsi.meet';
+        || 'https://liveedu.meet.castis.io';
+    android.appPackage = android.appPackage || 'liveedu.meet.castis.io';
     android.fDroidUrl = android.fDroidUrl || 'https://f-droid.org/en/packages/org.jitsi.meet/';
     if (android.dynamicLink) {
-        android.dynamicLink.apn = android.dynamicLink.apn || 'org.jitsi.meet';
+        android.dynamicLink.apn = android.dynamicLink.apn || 'liveedu.meet.castis.io';
         android.dynamicLink.appCode = android.dynamicLink.appCode || 'w2atb';
-        android.dynamicLink.ibi = android.dynamicLink.ibi || 'com.atlassian.JitsiMeet.ios';
+        android.dynamicLink.ibi = android.dynamicLink.ibi || 'https://liveedu.meet.castis.io';
         android.dynamicLink.isi = android.dynamicLink.isi || '1165103905';
     }
 }

@@ -175,7 +175,8 @@ class Watermarks extends Component<Props, State> {
                 backgroundImage: `url(${_logoUrl})`,
                 maxWidth: 140,
                 maxHeight: 70,
-                position: _logoLink ? 'static' : 'absolute'
+                position: _logoLink ? 'static' : 'absolute',
+                display: 'none'
             };
 
             reactElement = (<div
