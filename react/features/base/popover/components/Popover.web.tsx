@@ -214,6 +214,8 @@ class Popover extends Component<IProps, IState> {
             trigger
         } = this.props;
 
+        // console.log('1=========================== this.props ', this.props)
+
         if (overflowDrawer) {
             return (
                 <div

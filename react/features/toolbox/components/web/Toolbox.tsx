@@ -1,25 +1,35 @@
-import { withStyles } from '@mui/styles';
-import React, { Component } from 'react';
-import { WithTranslation } from 'react-i18next';
-import { batch, connect } from 'react-redux';
+import {withStyles} from '@mui/styles';
+import React, {Component} from 'react';
+import {WithTranslation} from 'react-i18next';
+import {batch, connect} from 'react-redux';
 
 // @ts-expect-error
-import keyboardShortcut from '../../../../../modules/keyboardshortcut/keyboardshortcut';
-import { isSpeakerStatsDisabled } from '../../../../features/speaker-stats/functions';
-import { ACTION_SHORTCUT_TRIGGERED, createShortcutEvent, createToolbarEvent } from '../../../analytics/AnalyticsEvents';
-import { sendAnalytics } from '../../../analytics/functions';
-import { IReduxState } from '../../../app/types';
-import { IJitsiConference } from '../../../base/conference/reducer';
-import { VISITORS_MODE_BUTTONS } from '../../../base/config/constants';
+import keyboardShortcut
+    from '../../../../../modules/keyboardshortcut/keyboardshortcut';
+import {
+    isSpeakerStatsDisabled
+} from '../../../../features/speaker-stats/functions';
+import {
+    ACTION_SHORTCUT_TRIGGERED,
+    createShortcutEvent,
+    createToolbarEvent
+} from '../../../analytics/AnalyticsEvents';
+import {sendAnalytics} from '../../../analytics/functions';
+import {IReduxState} from '../../../app/types';
+import {IJitsiConference} from '../../../base/conference/reducer';
+import {VISITORS_MODE_BUTTONS} from '../../../base/config/constants';
 import {
     getButtonsWithNotifyClick,
     getMultipleVideoSendingSupportFeatureFlag,
     getToolbarButtons,
     isToolbarButtonEnabled
 } from '../../../base/config/functions.web';
-import { openDialog, toggleDialog } from '../../../base/dialog/actions';
-import { isIosMobileBrowser, isMobileBrowser } from '../../../base/environment/utils';
-import { translate } from '../../../base/i18n/functions';
+import {openDialog, toggleDialog} from '../../../base/dialog/actions';
+import {
+    isIosMobileBrowser,
+    isMobileBrowser
+} from '../../../base/environment/utils';
+import {translate} from '../../../base/i18n/functions';
 import JitsiMeetJS from '../../../base/lib-jitsi-meet';
 import {
     raiseHand
@@ -29,58 +39,76 @@ import {
     hasRaisedHand,
     isLocalParticipantModerator
 } from '../../../base/participants/functions';
-import { getLocalVideoTrack } from '../../../base/tracks/functions';
-import { ITrack } from '../../../base/tracks/types';
+import {getLocalVideoTrack} from '../../../base/tracks/functions';
+import {ITrack} from '../../../base/tracks/types';
 import ContextMenu from '../../../base/ui/components/web/ContextMenu';
-import ContextMenuItemGroup from '../../../base/ui/components/web/ContextMenuItemGroup';
-import { toggleChat } from '../../../chat/actions.web';
+import ContextMenuItemGroup
+    from '../../../base/ui/components/web/ContextMenuItemGroup';
+import {toggleChat} from '../../../chat/actions.web';
 import ChatButton from '../../../chat/components/web/ChatButton';
-import EmbedMeetingButton from '../../../embed-meeting/components/EmbedMeetingButton';
-import SharedDocumentButton from '../../../etherpad/components/SharedDocumentButton';
+import EmbedMeetingButton
+    from '../../../embed-meeting/components/EmbedMeetingButton';
+import SharedDocumentButton
+    from '../../../etherpad/components/SharedDocumentButton';
 import FeedbackButton from '../../../feedback/components/FeedbackButton';
-import { setGifMenuVisibility } from '../../../gifs/actions';
-import { isGifEnabled } from '../../../gifs/functions';
-import InviteButton from '../../../invite/components/add-people-dialog/web/InviteButton';
-import { isVpaasMeeting } from '../../../jaas/functions';
-import KeyboardShortcutsButton from '../../../keyboard-shortcuts/components/web/KeyboardShortcutsButton';
-import { NoiseSuppressionButton } from '../../../noise-suppression/components';
+import {setGifMenuVisibility} from '../../../gifs/actions';
+import {isGifEnabled} from '../../../gifs/functions';
+import InviteButton
+    from '../../../invite/components/add-people-dialog/web/InviteButton';
+import {isVpaasMeeting} from '../../../jaas/functions';
+import KeyboardShortcutsButton
+    from '../../../keyboard-shortcuts/components/web/KeyboardShortcutsButton';
+import {NoiseSuppressionButton} from '../../../noise-suppression/components';
 import {
     close as closeParticipantsPane,
     open as openParticipantsPane
 } from '../../../participants-pane/actions.web';
-import ParticipantsPaneButton from '../../../participants-pane/components/web/ParticipantsPaneButton';
-import { getParticipantsPaneOpen } from '../../../participants-pane/functions';
-import { addReactionToBuffer } from '../../../reactions/actions.any';
-import { toggleReactionsMenuVisibility } from '../../../reactions/actions.web';
-import ReactionsMenuButton from '../../../reactions/components/web/ReactionsMenuButton';
-import { REACTIONS } from '../../../reactions/constants';
-import { isReactionsEnabled } from '../../../reactions/functions.any';
-import LiveStreamButton from '../../../recording/components/LiveStream/web/LiveStreamButton';
-import RecordButton from '../../../recording/components/Recording/web/RecordButton';
-import { isSalesforceEnabled } from '../../../salesforce/functions';
+import ParticipantsPaneButton
+    from '../../../participants-pane/components/web/ParticipantsPaneButton';
+import {getParticipantsPaneOpen} from '../../../participants-pane/functions';
+import {addReactionToBuffer} from '../../../reactions/actions.any';
+import {toggleReactionsMenuVisibility} from '../../../reactions/actions.web';
+import ReactionsMenuButton
+    from '../../../reactions/components/web/ReactionsMenuButton';
+import {REACTIONS} from '../../../reactions/constants';
+import {isReactionsEnabled} from '../../../reactions/functions.any';
+import LiveStreamButton
+    from '../../../recording/components/LiveStream/web/LiveStreamButton';
+import RecordButton
+    from '../../../recording/components/Recording/web/RecordButton';
+import {isSalesforceEnabled} from '../../../salesforce/functions';
 import {
     startScreenShareFlow
 } from '../../../screen-share/actions.web';
-import ShareAudioButton from '../../../screen-share/components/web/ShareAudioButton';
+import ShareAudioButton
+    from '../../../screen-share/components/web/ShareAudioButton';
 import {
     isScreenAudioSupported,
     isScreenVideoShared
 } from '../../../screen-share/functions';
-import SecurityDialogButton from '../../../security/components/security-dialog/web/SecurityDialogButton';
+import SecurityDialogButton
+    from '../../../security/components/security-dialog/web/SecurityDialogButton';
 import SettingsButton from '../../../settings/components/web/SettingsButton';
-import SharedVideoButton from '../../../shared-video/components/web/SharedVideoButton';
+import SharedVideoButton
+    from '../../../shared-video/components/web/SharedVideoButton';
 import SpeakerStats from '../../../speaker-stats/components/web/SpeakerStats';
-import SpeakerStatsButton from '../../../speaker-stats/components/web/SpeakerStatsButton';
-import ClosedCaptionButton from '../../../subtitles/components/ClosedCaptionButton';
-import { toggleTileView } from '../../../video-layout/actions.web';
+import SpeakerStatsButton
+    from '../../../speaker-stats/components/web/SpeakerStatsButton';
+import ClosedCaptionButton
+    from '../../../subtitles/components/ClosedCaptionButton';
+import {toggleTileView} from '../../../video-layout/actions.web';
 import TileViewButton from '../../../video-layout/components/TileViewButton';
-import { shouldDisplayTileView } from '../../../video-layout/functions.web';
-import VideoQualityButton from '../../../video-quality/components/VideoQualityButton';
-import VideoQualityDialog from '../../../video-quality/components/VideoQualityDialog';
-import VideoBackgroundButton from '../../../virtual-background/components/VideoBackgroundButton';
-import { iAmVisitor } from '../../../visitors/functions';
-import WhiteboardButton from '../../../whiteboard/components/web/WhiteboardButton';
-import { isWhiteboardButtonVisible } from '../../../whiteboard/functions';
+import {shouldDisplayTileView} from '../../../video-layout/functions.web';
+import VideoQualityButton
+    from '../../../video-quality/components/VideoQualityButton';
+import VideoQualityDialog
+    from '../../../video-quality/components/VideoQualityDialog';
+import VideoBackgroundButton
+    from '../../../virtual-background/components/VideoBackgroundButton';
+import {iAmVisitor} from '../../../visitors/functions';
+import WhiteboardButton
+    from '../../../whiteboard/components/web/WhiteboardButton';
+import {isWhiteboardButtonVisible} from '../../../whiteboard/functions';
 import {
     setFullScreen,
     setHangupMenuVisible,
@@ -88,19 +116,19 @@ import {
     setToolbarHovered,
     showToolbox
 } from '../../actions';
-import { NOTIFY_CLICK_MODE, NOT_APPLICABLE, THRESHOLDS } from '../../constants';
-import { isDesktopShareButtonDisabled, isToolboxVisible } from '../../functions';
-import { getJwtDisabledButtons } from '../../functions.any';
+import {NOTIFY_CLICK_MODE, NOT_APPLICABLE, THRESHOLDS} from '../../constants';
+import {isDesktopShareButtonDisabled, isToolboxVisible} from '../../functions';
+import {getJwtDisabledButtons} from '../../functions.any';
 import DownloadButton from '../DownloadButton';
 import HangupButton from '../HangupButton';
 import HelpButton from '../HelpButton';
 
 import AudioSettingsButton from './AudioSettingsButton';
 import CustomOptionButton from './CustomOptionButton';
-import { EndConferenceButton } from './EndConferenceButton';
+import {EndConferenceButton} from './EndConferenceButton';
 import FullscreenButton from './FullscreenButton';
 import HangupMenuButton from './HangupMenuButton';
-import { LeaveConferenceButton } from './LeaveConferenceButton';
+import {LeaveConferenceButton} from './LeaveConferenceButton';
 import LinkToSalesforceButton from './LinkToSalesforceButton';
 import OverflowMenuButton from './OverflowMenuButton';
 import ProfileButton from './ProfileButton';
@@ -394,7 +422,14 @@ class Toolbox extends Component<IProps> {
      * @returns {void}
      */
     componentDidMount() {
-        const { _toolbarButtons, t, dispatch, _reactionsEnabled, _gifsEnabled, _isSpeakerStatsDisabled } = this.props;
+        const {
+            _toolbarButtons,
+            t,
+            dispatch,
+            _reactionsEnabled,
+            _gifsEnabled,
+            _isSpeakerStatsDisabled
+        } = this.props;
 
         const KEYBOARD_SHORTCUTS = [
             isToolbarButtonEnabled('videoquality', _toolbarButtons) && {
@@ -499,7 +534,7 @@ class Toolbox extends Component<IProps> {
      * @inheritdoc
      */
     componentDidUpdate(prevProps: IProps) {
-        const { _dialog, _visible, dispatch } = this.props;
+        const {_dialog, _visible, dispatch} = this.props;
 
 
         if (prevProps._overflowMenuVisible
@@ -523,7 +558,7 @@ class Toolbox extends Component<IProps> {
      * @returns {void}
      */
     componentWillUnmount() {
-        [ 'A', 'C', 'D', 'R', 'S' ].forEach(letter =>
+        ['A', 'C', 'D', 'R', 'S'].forEach(letter =>
             APP.keyboardshortcut.unregisterShortcut(letter));
 
         if (this.props._reactionsEnabled) {
@@ -544,15 +579,15 @@ class Toolbox extends Component<IProps> {
             return null;
         }
 
-        const { _chatOpen, _visible, _toolbarButtons } = this.props;
+        const {_chatOpen, _visible, _toolbarButtons} = this.props;
         const rootClassNames = `new-toolbox ${_visible ? 'visible' : ''} ${
             _toolbarButtons.length ? '' : 'no-buttons'} ${_chatOpen ? 'shift-right' : ''}`;
 
         return (
             <div
-                className = { rootClassNames }
-                id = 'new-toolbox'>
-                { this._renderToolboxContent() }
+                className={rootClassNames}
+                id='new-toolbox'>
+                {this._renderToolboxContent()}
             </div>
         );
     }
@@ -578,7 +613,7 @@ class Toolbox extends Component<IProps> {
      * @returns {void}
      */
     _closeHangupMenuIfOpen() {
-        const { dispatch, _hangupMenuVisible } = this.props;
+        const {dispatch, _hangupMenuVisible} = this.props;
 
         _hangupMenuVisible && dispatch(setHangupMenuVisible(false));
     }
@@ -590,7 +625,7 @@ class Toolbox extends Component<IProps> {
      * @returns {void}
      */
     _closeOverflowMenuIfOpen() {
-        const { dispatch, _overflowMenuVisible } = this.props;
+        const {dispatch, _overflowMenuVisible} = this.props;
 
         _overflowMenuVisible && dispatch(setOverflowMenuVisible(false));
     }
@@ -634,7 +669,7 @@ class Toolbox extends Component<IProps> {
      * @returns {void}
      */
     _doToggleRaiseHand() {
-        const { _raisedHand } = this.props;
+        const {_raisedHand} = this.props;
 
         this.props.dispatch(raiseHand(!_raisedHand));
     }
@@ -889,7 +924,11 @@ class Toolbox extends Component<IProps> {
             group: 4
         };
 
-        const customButtons = _customToolbarButtons?.reduce((prev, { icon, id, text }) => {
+        const customButtons = _customToolbarButtons?.reduce((prev, {
+            icon,
+            id,
+            text
+        }) => {
             return {
                 ...prev,
                 [id]: {
@@ -992,9 +1031,10 @@ class Toolbox extends Component<IProps> {
         const buttons = this._getAllButtons();
 
         this._setButtonsNotifyClickMode(buttons);
+
         const isHangupVisible = isToolbarButtonEnabled('hangup', _toolbarButtons);
-        const { order } = THRESHOLDS.find(({ width }) => _clientWidth > width)
-            || THRESHOLDS[THRESHOLDS.length - 1];
+        const {order} = THRESHOLDS.find(({width}) => _clientWidth > width)
+        || THRESHOLDS[THRESHOLDS.length - 1];
         let sliceIndex = order.length + 2;
 
         const keys = Object.keys(buttons);
@@ -1002,7 +1042,7 @@ class Toolbox extends Component<IProps> {
         const filtered = [
             ...order.map(key => buttons[key as keyof typeof buttons]),
             ...Object.values(buttons).filter((button, index) => !order.includes(keys[index]))
-        ].filter(Boolean).filter(({ key, alias = NOT_APPLICABLE }) =>
+        ].filter(Boolean).filter(({key, alias = NOT_APPLICABLE}) =>
             !_jwtDisabledButons.includes(key)
             && (isToolbarButtonEnabled(key, _toolbarButtons) || isToolbarButtonEnabled(alias, _toolbarButtons))
         );
@@ -1016,9 +1056,26 @@ class Toolbox extends Component<IProps> {
             sliceIndex -= 1;
         }
 
+        // remove menu
+        // 1. invite people
+        // 2. security options
+        // 3. start video
+        // 4. share audio
+        // 5. embed meeting
+
+        const validList = ['profile', 'toggle-camera', 'videoquality', 'fullscreen', 'closedcaptions', 'recording', 'livestreaming', 'noisesuppression', 'etherpad', 'select-background', 'stats', 'settings', 'shortcuts', 'download', 'help']
+        const nFiltered = []
+
+        validList.forEach(label => {
+            filtered.slice(sliceIndex).forEach(b => {
+                if (b.key === label) {
+                    nFiltered.push(b)
+                }
+            })
+        })
         return {
             mainMenuButtons: filtered.slice(0, sliceIndex),
-            overflowMenuButtons: filtered.slice(sliceIndex)
+            overflowMenuButtons: nFiltered
         };
     }
 
@@ -1029,7 +1086,7 @@ class Toolbox extends Component<IProps> {
      * @returns {void}
      */
     _onMouseOut() {
-        const { _overflowMenuVisible, dispatch } = this.props;
+        const {_overflowMenuVisible, dispatch} = this.props;
 
         !_overflowMenuVisible && dispatch(setToolbarHovered(false));
     }
@@ -1114,12 +1171,12 @@ class Toolbox extends Component<IProps> {
     }
 
     /**
-    * Creates an analytics keyboard shortcut event and dispatches an action for
-    * toggling the display of Video Quality.
-    *
-    * @private
-    * @returns {void}
-    */
+     * Creates an analytics keyboard shortcut event and dispatches an action for
+     * toggling the display of Video Quality.
+     *
+     * @private
+     * @returns {void}
+     */
     _onShortcutToggleVideoQuality() {
         sendAnalytics(createShortcutEvent('video.quality'));
 
@@ -1172,7 +1229,7 @@ class Toolbox extends Component<IProps> {
         sendAnalytics(createShortcutEvent(
             'toggle.raise.hand',
             ACTION_SHORTCUT_TRIGGERED,
-            { enable: !this.props._raisedHand }));
+            {enable: !this.props._raisedHand}));
 
         this._doToggleRaiseHand();
     }
@@ -1190,11 +1247,11 @@ class Toolbox extends Component<IProps> {
             return;
         }
         sendAnalytics(createShortcutEvent(
-                'toggle.screen.sharing',
-                ACTION_SHORTCUT_TRIGGERED,
-                {
-                    enable: !this.props._screenSharing
-                }));
+            'toggle.screen.sharing',
+            ACTION_SHORTCUT_TRIGGERED,
+            {
+                enable: !this.props._screenSharing
+            }));
 
         this._doToggleScreenshare();
     }
@@ -1221,7 +1278,7 @@ class Toolbox extends Component<IProps> {
      * @returns {void}
      */
     _doToggleSpekearStats() {
-        const { dispatch } = this.props;
+        const {dispatch} = this.props;
 
         dispatch(toggleDialog(SpeakerStats, {
             conference: APP.conference
@@ -1246,7 +1303,7 @@ class Toolbox extends Component<IProps> {
      * @returns {void}
      */
     _onToolbarToggleParticipantsPane() {
-        const { dispatch, _participantsPaneOpen } = this.props;
+        const {dispatch, _participantsPaneOpen} = this.props;
 
         if (_participantsPaneOpen) {
             dispatch(closeParticipantsPane());
@@ -1295,9 +1352,9 @@ class Toolbox extends Component<IProps> {
     _onToolbarToggleFullScreen() {
         sendAnalytics(createToolbarEvent(
             'toggle.fullscreen',
-                {
-                    enable: !this.props._fullScreen
-                }));
+            {
+                enable: !this.props._fullScreen
+            }));
         this._closeOverflowMenuIfOpen();
         this._doToggleFullScreen();
     }
@@ -1312,7 +1369,7 @@ class Toolbox extends Component<IProps> {
     _onToolbarToggleRaiseHand() {
         sendAnalytics(createToolbarEvent(
             'raise.hand',
-            { enable: !this.props._raisedHand }));
+            {enable: !this.props._raisedHand}));
 
         this._doToggleRaiseHand();
     }
@@ -1327,7 +1384,7 @@ class Toolbox extends Component<IProps> {
     _onToolbarToggleScreenshare() {
         sendAnalytics(createToolbarEvent(
             'toggle.screen.sharing',
-            { enable: !this.props._screenSharing }));
+            {enable: !this.props._screenSharing}));
 
         this._closeOverflowMenuIfOpen();
         this._doToggleScreenshare();
@@ -1398,41 +1455,48 @@ class Toolbox extends Component<IProps> {
         const toolbarAccLabel = 'toolbar.accessibilityLabel.moreActionsMenu';
         const containerClassName = `toolbox-content${_isMobile || _isNarrowLayout ? ' toolbox-content-mobile' : ''}`;
 
-        const { mainMenuButtons, overflowMenuButtons } = this._getVisibleButtons();
+        const {
+            mainMenuButtons,
+            overflowMenuButtons
+        } = this._getVisibleButtons();
 
         return (
-            <div className = { containerClassName }>
+            <div className={containerClassName}>
                 <div
-                    className = 'toolbox-content-wrapper'
-                    onFocus = { this._onTabIn }
-                    { ...(_isMobile ? {} : {
+                    className='toolbox-content-wrapper'
+                    onFocus={this._onTabIn}
+                    {...(_isMobile ? {} : {
                         onMouseOut: this._onMouseOut,
                         onMouseOver: this._onMouseOver
-                    }) }>
+                    })}>
 
-                    <div className = 'toolbox-content-items'>
-                        {mainMenuButtons.map(({ Content, key, ...rest }) => Content !== Separator && (
+                    <div className='toolbox-content-items'>
+                        {mainMenuButtons.map(({
+                                                  Content,
+                                                  key,
+                                                  ...rest
+                                              }) => Content !== Separator && (
                             <Content
-                                { ...rest }
-                                buttonKey = { key }
-                                key = { key } />))}
+                                {...rest}
+                                buttonKey={key}
+                                key={key}/>))}
 
                         {Boolean(overflowMenuButtons.length) && (
                             <OverflowMenuButton
-                                ariaControls = 'overflow-menu'
-                                isOpen = { _overflowMenuVisible }
-                                key = 'overflow-menu'
-                                onVisibilityChange = { this._onSetOverflowVisible }
-                                showMobileReactions = {
+                                ariaControls='overflow-menu'
+                                isOpen={_overflowMenuVisible}
+                                key='overflow-menu'
+                                onVisibilityChange={this._onSetOverflowVisible}
+                                showMobileReactions={
                                     _reactionsEnabled && (_isMobile || _isNarrowLayout)
                                 }>
                                 <ContextMenu
-                                    accessibilityLabel = { t(toolbarAccLabel) }
-                                    className = { classes.contextMenu }
-                                    hidden = { false }
-                                    id = 'overflow-context-menu'
-                                    inDrawer = { _overflowDrawer }
-                                    onKeyDown = { this._onEscKey }>
+                                    accessibilityLabel={t(toolbarAccLabel)}
+                                    className={classes.contextMenu}
+                                    hidden={false}
+                                    id='overflow-context-menu'
+                                    inDrawer={_overflowDrawer}
+                                    onKeyDown={this._onEscKey}>
                                     {overflowMenuButtons.reduce((acc, val) => {
                                         if (acc.length) {
                                             const prev = acc[acc.length - 1];
@@ -1441,56 +1505,61 @@ class Toolbox extends Component<IProps> {
                                             if (group === val.group) {
                                                 prev.push(val);
                                             } else {
-                                                acc.push([ val ]);
+                                                acc.push([val]);
                                             }
                                         } else {
-                                            acc.push([ val ]);
+                                            acc.push([val]);
                                         }
 
                                         return acc;
                                     }, []).map((buttonGroup: any) => (
-                                        <ContextMenuItemGroup key = { `group-${buttonGroup[0].group}` }>
-                                            {buttonGroup.map(({ key, Content, ...rest }: any) => (
-                                                key !== 'raisehand' || !_reactionsEnabled)
+                                        <ContextMenuItemGroup
+                                            key={`group-${buttonGroup[0].group}`}>
+                                            {buttonGroup.map(({
+                                                                  key,
+                                                                  Content,
+                                                                  ...rest
+                                                              }: any) => (
+                                                    key !== 'raisehand' || !_reactionsEnabled)
                                                 && <Content
-                                                    { ...rest }
-                                                    buttonKey = { key }
-                                                    contextMenu = { true }
-                                                    key = { key }
-                                                    showLabel = { true } />)}
+                                                    {...rest}
+                                                    buttonKey={key}
+                                                    contextMenu={true}
+                                                    key={key}
+                                                    showLabel={true}/>)}
                                         </ContextMenuItemGroup>))}
                                 </ContextMenu>
                             </OverflowMenuButton>
                         )}
 
-                        { isToolbarButtonEnabled('hangup', _toolbarButtons) && (
+                        {isToolbarButtonEnabled('hangup', _toolbarButtons) && (
                             _endConferenceSupported
                                 ? <HangupMenuButton
-                                    ariaControls = 'hangup-menu'
-                                    isOpen = { _hangupMenuVisible }
-                                    key = 'hangup-menu'
-                                    notifyMode = { this._getButtonNotifyMode('hangup-menu') }
-                                    onVisibilityChange = { this._onSetHangupVisible }>
+                                    ariaControls='hangup-menu'
+                                    isOpen={_hangupMenuVisible}
+                                    key='hangup-menu'
+                                    notifyMode={this._getButtonNotifyMode('hangup-menu')}
+                                    onVisibilityChange={this._onSetHangupVisible}>
                                     <ContextMenu
-                                        accessibilityLabel = { t(toolbarAccLabel) }
-                                        className = { classes.hangupMenu }
-                                        hidden = { false }
-                                        inDrawer = { _overflowDrawer }
-                                        onKeyDown = { this._onEscKey }>
+                                        accessibilityLabel={t(toolbarAccLabel)}
+                                        className={classes.hangupMenu}
+                                        hidden={false}
+                                        inDrawer={_overflowDrawer}
+                                        onKeyDown={this._onEscKey}>
                                         <EndConferenceButton
-                                            buttonKey = 'end-meeting'
-                                            notifyMode = { this._getButtonNotifyMode('end-meeting') } />
+                                            buttonKey='end-meeting'
+                                            notifyMode={this._getButtonNotifyMode('end-meeting')}/>
                                         <LeaveConferenceButton
-                                            buttonKey = 'hangup'
-                                            notifyMode = { this._getButtonNotifyMode('hangup') } />
+                                            buttonKey='hangup'
+                                            notifyMode={this._getButtonNotifyMode('hangup')}/>
                                     </ContextMenu>
                                 </HangupMenuButton>
                                 : <HangupButton
-                                    buttonKey = 'hangup'
-                                    customClass = 'hangup-button'
-                                    key = 'hangup-button'
-                                    notifyMode = { this._getButtonNotifyMode('hangup') }
-                                    visible = { isToolbarButtonEnabled('hangup', _toolbarButtons) } />
+                                    buttonKey='hangup'
+                                    customClass='hangup-button'
+                                    key='hangup-button'
+                                    notifyMode={this._getButtonNotifyMode('hangup')}
+                                    visible={isToolbarButtonEnabled('hangup', _toolbarButtons)}/>
                         )}
                     </div>
                 </div>
@@ -1509,8 +1578,8 @@ class Toolbox extends Component<IProps> {
  * @returns {{}}
  */
 function _mapStateToProps(state: IReduxState, ownProps: Partial<IProps>) {
-    const { conference } = state['features/base/conference'];
-    const { isNarrowLayout } = state['features/base/responsive-ui'];
+    const {conference} = state['features/base/conference'];
+    const {isNarrowLayout} = state['features/base/responsive-ui'];
     const endConferenceSupported = conference?.isEndConferenceSupported() && isLocalParticipantModerator(state);
 
     const {
@@ -1528,7 +1597,7 @@ function _mapStateToProps(state: IReduxState, ownProps: Partial<IProps>) {
     } = state['features/toolbox'];
     const localParticipant = getLocalParticipant(state);
     const localVideo = getLocalVideoTrack(state['features/base/tracks']);
-    const { clientWidth } = state['features/base/responsive-ui'];
+    const {clientWidth} = state['features/base/responsive-ui'];
     let toolbarButtons = ownProps.toolbarButtons || getToolbarButtons(state);
 
     if (iAmVisitor(state)) {

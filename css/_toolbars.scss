@@ -181,7 +181,7 @@ div.hangup-menu-button {
 .audio-preview,
 .video-preview {
     .toolbox-icon.toggled {
-        background: none;
+        background: red;
 
         &:hover {
             background: $newToolbarButtonHoverColor;
