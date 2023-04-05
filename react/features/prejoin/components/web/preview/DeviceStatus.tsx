@@ -79,7 +79,7 @@ function DeviceStatus({ deviceStatusType, deviceStatusText, t }: IProps) {
             role = 'alert'
             tabIndex = { -1 }>
             {!hasError && <div className = { classes.indicator } />}
-            <span role = 'heading'>
+            <span role = 'heading' style={{color:'#000000'}}>
                 {hasError ? t('prejoin.errorNoPermissions') : t(deviceStatusText ?? '')}
             </span>
         </div>

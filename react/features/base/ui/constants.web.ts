@@ -220,6 +220,7 @@ export const commonStyles = (theme: Theme) => {
             height: 48,
             justifyContent: 'center',
             width: 48,
+            backgroundColor:'#8E8D89',
 
             '@media (hover: hover) and (pointer: fine)': {
                 '&:hover': {

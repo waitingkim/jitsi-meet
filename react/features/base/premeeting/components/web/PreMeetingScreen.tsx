@@ -135,7 +135,7 @@ const useStyles = makeStyles()(theme => {
         },
         title: {
             ...withPixelLineHeight(theme.typography.heading4),
-            color: `${theme.palette.text01}!important`,
+            color: `${theme.palette.text01}`,
             marginBottom: theme.spacing(3),
             textAlign: 'center',
 
@@ -157,17 +157,17 @@ const useStyles = makeStyles()(theme => {
 });
 
 const PreMeetingScreen = ({
-    _buttons,
-    _premeetingBackground,
-    _roomName,
-    children,
-    className,
-    showDeviceStatus,
-    skipPrejoinButton,
-    title,
-    videoMuted,
-    videoTrack
-}: IProps) => {
+                              _buttons,
+                              _premeetingBackground,
+                              _roomName,
+                              children,
+                              className,
+                              showDeviceStatus,
+                              skipPrejoinButton,
+                              title,
+                              videoMuted,
+                              videoTrack
+                          }: IProps) => {
     const { classes } = useStyles();
     const style = _premeetingBackground ? {
         background: _premeetingBackground,
@@ -176,18 +176,18 @@ const PreMeetingScreen = ({
     } : {};
 
     return (
-        <div className = { clsx('premeeting-screen', classes.container, className) }>
+        <div className = { clsx('premeeting-screen', classes.container, className) } style={{backgroundColor:'#FEF7EC'}}>
             <div style = { style }>
                 <div className = { classes.content }>
                     <ConnectionStatus />
 
                     <div className = { classes.contentControls }>
-                        <h1 className = { classes.title }>
-                            {title}
-                        </h1>
+                        <span className = { classes.title } style={{color:'#000000', textAlign:'left', width:'100%'}}>
+                            Let's start
+                        </span>
                         {_roomName && (
-                            <span className = { classes.roomName }>
-                                {_roomName}
+                            <span className = { classes.roomName } style={{color:'#000000', textAlign:'left'}} >
+                                you meeting with...
                             </span>
                         )}
                         {children}
@@ -236,3 +236,4 @@ function mapStateToProps(state: IReduxState, ownProps: Partial<IProps>) {
 }
 
 export default connect(mapStateToProps)(PreMeetingScreen);
+

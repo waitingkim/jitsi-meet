@@ -64,13 +64,13 @@ function getBundleAnalyzerPlugin(analyzeBundle, name) {
  */
 function devServerProxyBypass({ path }) {
     if (path.startsWith('/css/')
-            || path.startsWith('/doc/')
-            || path.startsWith('/fonts/')
-            || path.startsWith('/images/')
-            || path.startsWith('/lang/')
-            || path.startsWith('/sounds/')
-            || path.startsWith('/static/')
-            || path.endsWith('.wasm')) {
+        || path.startsWith('/doc/')
+        || path.startsWith('/fonts/')
+        || path.startsWith('/images/')
+        || path.startsWith('/lang/')
+        || path.startsWith('/sounds/')
+        || path.startsWith('/static/')
+        || path.endsWith('.wasm')) {
 
         return path;
     }
@@ -186,11 +186,11 @@ function getConfig(options = {}) {
         },
         plugins: [
             detectCircularDeps
-                && new CircularDependencyPlugin({
-                    allowAsyncCycles: false,
-                    exclude: /node_modules/,
-                    failOnError: false
-                })
+            && new CircularDependencyPlugin({
+                allowAsyncCycles: false,
+                exclude: /node_modules/,
+                failOnError: false
+            })
         ].filter(Boolean),
         resolve: {
             alias: {
@@ -239,8 +239,8 @@ function getDevServerConfig() {
                 warnings: false
             }
         },
-        host: '127.0.0.1',
-        port: 8081,
+        host: '0.0.0.0',
+        port: 8443,
         hot: true,
         proxy: {
             '/': {
@@ -252,7 +252,7 @@ function getDevServerConfig() {
                 }
             }
         },
-        server: process.env.CODESPACES ? 'http' : 'http',
+        server: process.env.CODESPACES ? 'http' : 'https',
         static: {
             directory: process.cwd()
         }
@@ -370,12 +370,12 @@ module.exports = (_env, argv) => {
             },
 
             module: { rules: [
-                ...config.module.rules,
-                {
-                    test: resolve(__dirname, 'node_modules/webpack-dev-server/client'),
-                    loader: 'null-loader'
-                }
-            ] },
+                    ...config.module.rules,
+                    {
+                        test: resolve(__dirname, 'node_modules/webpack-dev-server/client'),
+                        loader: 'null-loader'
+                    }
+                ] },
             plugins: [
             ],
             performance: getPerformanceHints(perfHintOptions, 200 * 1024),
