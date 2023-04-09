@@ -63,12 +63,18 @@ export function createLocalTracksF(options: ITrackOptions = {}, store?: IStore) 
     } = state['features/base/config'];
     const constraints = options.constraints ?? state['features/base/config'].constraints;
 
+    //TODO: 선택된 로컬 스트림 리턴
     return (
         loadEffects(store).then((effectsArray: Object[]) => {
             // Filter any undefined values returned by Promise.resolve().
             const effects = effectsArray.filter(effect => Boolean(effect));
+            console.log('[castis] cameraDeviceId cameraDeviceId ', cameraDeviceId)
+            console.log('[castis] cameraDeviceId options.devices ', options.devices)
+            console.log('[castis] cameraDeviceId devices?.slice(0) ', options.devices?.slice(0))
 
-            return JitsiMeetJS.createLocalTracks(
+
+
+            let localTracks = JitsiMeetJS.createLocalTracks(
                 {
                     cameraDeviceId,
                     constraints,
@@ -87,9 +93,47 @@ export function createLocalTracksF(options: ITrackOptions = {}, store?: IStore) 
                 })
             .catch((err: Error) => {
                 logger.error('Failed to create local tracks', options.devices, err);
-
                 return Promise.reject(err);
             });
+
+
+            cameraDeviceId = 'd086f8eaf136642df1aa3236d2cb4fa61af4c0a516bb8caff23fbb3af544f10f'
+            let secondLocalTracks = JitsiMeetJS.createLocalTracks(
+                {
+                    cameraDeviceId,
+                    constraints,
+                    desktopSharingFrameRate,
+                    desktopSharingSourceDevice,
+                    desktopSharingSources,
+
+                    // Copy array to avoid mutations inside library.
+                    devices: ['video'],
+                    effects,
+                    firefox_fake_device, // eslint-disable-line camelcase
+                    firePermissionPromptIsShownEvent,
+                    micDeviceId,
+                    resolution,
+                    timeout
+                }).then(( track ) => {
+                    console.log('[castis] cameraDeviceId then secondLocalTracks ', track)
+                    return track
+                }
+            ).catch((err: Error) => {
+                logger.error('Failed to create local tracks', options.devices, err);
+                return Promise.reject(err);
+            });
+
+            let a = localTracks.then(tracks => {
+                return tracks
+            }).then(tracks => {
+                console.log('[castis] cameraDeviceId tracks!!! ', tracks)
+                return secondLocalTracks.then(track => {
+                    return Promise.resolve(tracks.push(track[0]))
+                })
+            })
+            console.log('[castis] cameraDeviceId then a!!! ', a)
+            console.log('[castis] cameraDeviceId resultlocalTracks ', localTracks)
+            return localTracks
         }));
 }
 

@@ -370,6 +370,7 @@ function replaceStoredTracks(oldTrack: any, newTrack: any) {
  * @returns {Function}
  */
 export function trackAdded(track: any) {
+    console.log('[castis] actions trackAdded ', track)
     return async (dispatch: IStore['dispatch'], getState: IStore['getState']) => {
         track.on(
             JitsiTrackEvents.TRACK_MUTE_CHANGED,

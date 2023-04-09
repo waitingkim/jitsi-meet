@@ -10,6 +10,7 @@ EXCALIDRAW_DIR_DEV = node_modules/@jitsi/excalidraw/dist/excalidraw-assets-dev
 TFLITE_WASM = react/features/stream-effects/virtual-background/vendor/tflite
 MEET_MODELS_DIR  = react/features/stream-effects/virtual-background/vendor/models
 FACE_MODELS_DIR = node_modules/@vladmandic/human-models/models
+DEPLOY_DIR_SOURCE = /Volumes/Works/WorkSpaces/nginx_public
 NODE_SASS = ./node_modules/.bin/sass
 NPM = npm
 OUTPUT_DIR = .
@@ -24,7 +25,7 @@ else
 	WEBPACK_DEV_SERVER = ./node_modules/.bin/webpack serve --mode development
 endif
 
-all: compile deploy clean
+all: compile deploy source-package clean
 
 compile:
 	NODE_OPTIONS=--max-old-space-size=8192 \
@@ -125,8 +126,8 @@ dev: deploy-init deploy-css deploy-rnnoise-binary deploy-tflite deploy-meet-mode
 	$(WEBPACK_DEV_SERVER)
 
 source-package:
-	mkdir -p source_package/jitsi-meet/css && \
-	cp -r *.js *.html resources/*.txt favicon.ico fonts images libs static sounds LICENSE lang source_package/jitsi-meet && \
-	cp css/all.css source_package/jitsi-meet/css && \
-	(cd source_package ; tar cjf ../jitsi-meet.tar.bz2 jitsi-meet) && \
-	rm -rf source_package
+	mkdir -p $(DEPLOY_DIR_SOURCE)/css && \
+	cp -r *.js *.html resources/*.txt favicon.ico fonts images libs static sounds LICENSE lang $(DEPLOY_DIR_SOURCE) && \
+	cp css/all.css $(DEPLOY_DIR_SOURCE)/css
+#	(cd $(DEPLOY_DIR) ; tar cjf ../jitsi-meet.tar.bz2 jitsi-meet)
+#	rm -rf $(DEPLOY_DIR)/jitsi-meet

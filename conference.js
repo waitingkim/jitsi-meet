@@ -504,6 +504,7 @@ export default {
      */
     createInitialLocalTracks(options = {}) {
         const errors = {};
+        console.log('[castis] createInitialLocalTracks ', options)
 
         // Always get a handle on the audio input device so that we have statistics (such as "No audio input" or
         // "Are you trying to speak?" ) even if the user joins the conference muted.
@@ -539,10 +540,11 @@ export default {
             timeout,
             firePermissionPromptIsShownEvent: true
         };
-
+        console.log('[castis] createInitialLocalTracks audioOptions ', audioOptions)
         // Spot uses the _desktopSharingSourceDevice config option to use an external video input device label as
         // screenshare and calls getUserMedia instead of getDisplayMedia for capturing the media.
         if (options.startScreenSharing && config._desktopSharingSourceDevice) {
+            console.log('[castis] createInitialLocalTracks startScreenSharing 1')
             tryCreateLocalTracks = this._createDesktopTrack()
                 .then(([ desktopStream ]) => {
                     if (!requestedAudio) {
@@ -570,9 +572,11 @@ export default {
                     return [];
                 });
         } else if (!requestedAudio && !requestedVideo) {
+            console.log('[castis] createInitialLocalTracks startScreenSharing 2')
             // Resolve with no tracks
             tryCreateLocalTracks = Promise.resolve([]);
         } else {
+            console.log('[castis] createInitialLocalTracks startScreenSharing 3')
             tryCreateLocalTracks = createLocalTracksF({
                 devices: initialDevices,
                 timeout,
@@ -634,17 +638,20 @@ export default {
                 });
         }
 
+        console.log('[castis] createInitialLocalTracks tryCreateLocalTracks!! ', tryCreateLocalTracks)
         // Hide the permissions prompt/overlay as soon as the tracks are
         // created. Don't wait for the connection to be made, since in some
         // cases, when auth is required, for instance, that won't happen until
         // the user inputs their credentials, but the dialog would be
         // overshadowed by the overlay.
         tryCreateLocalTracks.then(tracks => {
+            // console.log('[castis] createInitialLocalTracks tracks ', tracks)
             APP.store.dispatch(mediaPermissionPromptVisibilityChanged(false));
 
             return tracks;
         });
 
+        console.log('[castis] createInitialLocalTracks tryCreateLocalTracks ', tryCreateLocalTracks)
         return {
             tryCreateLocalTracks,
             errors
@@ -784,6 +791,8 @@ export default {
                 || isUserInteractionRequiredForUnmute(APP.store.getState())
         };
 
+        console.log('[castis] init roomName ', roomName)
+
         this.roomName = roomName;
 
         try {
@@ -828,13 +837,14 @@ export default {
 
             const { tryCreateLocalTracks, errors } = this.createInitialLocalTracks(initialOptions);
             const tracks = await tryCreateLocalTracks;
-
+            console.log('[castis] init tracks ', tracks)
             // Initialize device list a second time to ensure device labels
             // get populated in case of an initial gUM acceptance; otherwise
             // they may remain as empty strings.
             this._initDeviceList(true);
 
             if (isPrejoinPageVisible(APP.store.getState())) {
+                console.log('[castis] init isPrejoinPageVisible ', tracks)
                 return APP.store.dispatch(initPrejoin(tracks, errors));
             }
 
@@ -843,6 +853,8 @@ export default {
             this._displayErrorsForCreateInitialLocalTracks(errors);
 
             let localTracks = handleStartAudioMuted(initialOptions, tracks);
+
+            console.log('[castis] init localTracks ', localTracks)
 
             // in case where gum is slow and resolves after the startAudio/VideoMuted coming from jicofo, we can be
             // join unmuted even though jicofo had instruct us to mute, so let's respect that before passing the tracks
@@ -1653,6 +1665,8 @@ export default {
 
             const desktopVideoStream = desktopStreams.find(stream => stream.getType() === MEDIA_TYPE.VIDEO);
             const desktopAudioStream = desktopStreams.find(stream => stream.getType() === MEDIA_TYPE.AUDIO);
+
+            console.log('[castis] _createDesktopTrack desktopVideoStream ', desktopVideoStream)
 
             if (desktopAudioStream) {
                 desktopAudioStream.on(

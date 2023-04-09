@@ -12,7 +12,8 @@
         "noImplicitAny": true,
         "strictPropertyInitialization": false,
         "resolveJsonModule": true,
-        "moduleSuffixes": [".native", ".ios", ".android", ""]
+        "moduleSuffixes": [".native", ".ios", ".android", ""],
+        "esModuleInterop": true
     },
     "exclude": [
         "node_modules",

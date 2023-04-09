@@ -12,7 +12,8 @@
         "noImplicitAny": true,
         "strictPropertyInitialization": false,
         "resolveJsonModule": true,
-        "moduleSuffixes": [".web", ""]
+        "moduleSuffixes": [".web", ""],
+        "esModuleInterop": true
     },
     "exclude": [
         "node_modules",

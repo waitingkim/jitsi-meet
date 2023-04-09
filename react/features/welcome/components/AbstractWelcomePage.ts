@@ -182,7 +182,7 @@ export class AbstractWelcomePage<P extends IProps> extends Component<P> {
      */
     _onJoin() {
         const room = this.state.room || this.state.generatedRoomName;
-
+        console.log('[castis] room ', room)
         sendAnalytics(
             createWelcomePageEvent('clicked', 'joinButton', {
                 isGenerated: !this.state.room,
@@ -197,8 +197,8 @@ export class AbstractWelcomePage<P extends IProps> extends Component<P> {
             const onAppNavigateSettled
                 = () => this._mounted && this.setState({ joining: false });
 
-            this.props.dispatch(appNavigate(room))
-                .then(onAppNavigateSettled, onAppNavigateSettled);
+            // this.props.dispatch(appNavigate(room))
+            //     .then(onAppNavigateSettled, onAppNavigateSettled);
         }
     }
 

@@ -69,13 +69,14 @@ export function getDisplayName(state: IReduxState): string {
  * @returns {string}
  */
 export function getUserSelectedCameraDeviceId(stateful: IStateful) {
+    console.log('[castis] getUserSelectedCameraDeviceId stateful ', stateful)
     const state = toState(stateful);
     const {
         userSelectedCameraDeviceId,
         userSelectedCameraDeviceLabel
     } = state['features/base/settings'];
     const { videoInput } = state['features/base/devices'].availableDevices;
-
+    console.log('[castis] getUserSelectedCameraDeviceId videoInput ', videoInput)
     return _getUserSelectedDeviceId({
         availableDevices: videoInput,
 

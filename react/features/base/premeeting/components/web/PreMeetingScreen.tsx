@@ -200,6 +200,9 @@ const PreMeetingScreen = ({
             <Preview
                 videoMuted = { videoMuted }
                 videoTrack = { videoTrack } />
+            <Preview
+                videoMuted = { videoMuted }
+                videoTrack = { videoTrack } />
         </div>
     );
 };

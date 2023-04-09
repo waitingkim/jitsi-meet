@@ -140,7 +140,7 @@
     "@babel/preset-env": "7.16.0",
     "@babel/preset-flow": "7.16.0",
     "@babel/preset-react": "7.16.0",
-    "@jitsi/eslint-config": "4.1.5",
+    "@jitsi/eslint-config": "^4.1.5",
     "@types/js-md5": "0.4.3",
     "@types/lodash": "4.14.182",
     "@types/react": "17.0.14",
@@ -199,7 +199,7 @@
     "postinstall": "patch-package --error-on-fail && jetify",
     "validate": "npm ls",
     "start": "make dev",
-    "build": "webpack-cli build --mode production"
+    "build": "make"
   },
   "resolutions": {
     "@types/react": "17.0.14",

@@ -427,7 +427,7 @@ function mapStateToProps(state: IReduxState) {
     const showErrorOnJoin = isDisplayNameRequired(state) && !name;
     const { id: participantId } = getLocalParticipant(state) ?? {};
     const { joiningInProgress } = state['features/prejoin'];
-
+    console.log('||||STATE|||| ', state)
     return {
         canEditDisplayName: isPrejoinDisplayNameVisible(state),
         deviceStatusVisible: isDeviceStatusVisible(state),
