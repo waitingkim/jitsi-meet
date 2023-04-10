@@ -201,7 +201,7 @@ export function initPrejoin(tracks: Object[], errors: Object) {
     return async function(dispatch: IStore['dispatch']) {
         dispatch(setPrejoinDeviceErrors(errors));
         dispatch(prejoinInitialized());
-
+        console.log('[castis] initPrejoin ', tracks)
         tracks.forEach(track => dispatch(trackAdded(track)));
     };
 }

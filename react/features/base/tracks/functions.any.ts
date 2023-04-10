@@ -20,7 +20,6 @@ import { ITrack } from './types';
  * @returns {Object} Tracks state.
  */
 export const getTrackState = (state: IReduxState) => state['features/base/tracks'];
-
 /**
  * Checks if the passed media type is muted for the participant.
  *
@@ -142,6 +141,7 @@ export function getLocalTracks(tracks: ITrack[], includePending = false) {
     // has not yet been added to the redux store. Once GUM is cancelled, it will
     // never make it to the store nor there will be any
     // `TRACK_ADDED`/`TRACK_REMOVED` actions dispatched for it.
+    // console.log('[castis] getLocalTracks!!! tracks ', tracks)
     return tracks.filter(t => t.local && (t.jitsiTrack || includePending));
 }
 
@@ -156,15 +156,40 @@ export function getLocalVideoTrack(tracks: ITrack[]) {
 }
 
 /**
+ * Returns local video tracks.
+ *
+ * @param {ITrack[]} tracks - List of all tracks.
+ * @returns {(Track|undefined)}
+ */
+export function getLocalVideoTracks(tracks: ITrack[]) {
+    return getLocalTracks(tracks);
+}
+
+/**
  * Returns the stored local video track.
  *
  * @param {IReduxState} state - The redux state.
  * @returns {Object}
  */
 export function getLocalJitsiVideoTrack(state: IReduxState) {
+    // console.log('[castis] getLocalJitsiVideoTrack@@@@ state ', state)
+    // console.log('[castis] getLocalJitsiVideoTrack@@@@ track ', getTrackState(state))
     const track = getLocalVideoTrack(getTrackState(state));
-
     return track?.jitsiTrack;
+}
+
+/**
+ * Returns the stored local video track.
+ *
+ * @param {IReduxState} state - The redux state.
+ * @returns {Object}
+ */
+export function getLocalJitsiVideoTracks(state: IReduxState) {
+    const tracks = getLocalVideoTracks(getTrackState(state));
+    console.log('[castis] getLocalJitsiVideoTracks track ', APP.store.getState()['features/base/tracks'])
+
+    // return [track[0]?.jitsiTrack, track[1]?.jitsiTrack];
+    return tracks
 }
 
 /**

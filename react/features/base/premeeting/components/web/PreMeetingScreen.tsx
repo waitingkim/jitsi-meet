@@ -82,6 +82,8 @@ interface IProps {
      * The video track to render as preview (if omitted, the default local track will be rendered).
      */
     videoTrack?: Object;
+
+    videoTracks?: Object;
 }
 
 const useStyles = makeStyles()(theme => {
@@ -166,7 +168,8 @@ const PreMeetingScreen = ({
                               skipPrejoinButton,
                               title,
                               videoMuted,
-                              videoTrack
+                              videoTrack,
+                              videoTracks
                           }: IProps) => {
     const { classes } = useStyles();
     const style = _premeetingBackground ? {
@@ -199,10 +202,12 @@ const PreMeetingScreen = ({
             </div>
             <Preview
                 videoMuted = { videoMuted }
-                videoTrack = { videoTrack } />
+                videoTrack = { videoTracks[1]?.jitsiTrack }
+                videoTracks = { videoTracks }/>
             <Preview
                 videoMuted = { videoMuted }
-                videoTrack = { videoTrack } />
+                videoTrack = { videoTracks[2]?.jitsiTrack  }
+                videoTracks = { videoTracks }/>
         </div>
     );
 };

@@ -372,6 +372,9 @@ function replaceStoredTracks(oldTrack: any, newTrack: any) {
 export function trackAdded(track: any) {
     console.log('[castis] actions trackAdded ', track)
     return async (dispatch: IStore['dispatch'], getState: IStore['getState']) => {
+
+        console.log('[castis] actions IStore[\'getState\'] ', getState)
+
         track.on(
             JitsiTrackEvents.TRACK_MUTE_CHANGED,
             () => dispatch(trackMutedChanged(track)));
@@ -434,7 +437,7 @@ export function trackAdded(track: any) {
             isReceivingData = true;
         }
 
-        return dispatch({
+        const jitsiTrack = {
             type: TRACK_ADDED,
             track: {
                 jitsiTrack: track,
@@ -446,9 +449,12 @@ export function trackAdded(track: any) {
                 noDataFromSourceNotificationInfo,
                 participantId,
                 videoStarted: false,
-                videoType: track.videoType
+                videoType: track.videoType,
+                devicesId: track.deviceId
             }
-        });
+        }
+        console.log('[castis] actions trackAdded jitsiTrack ', jitsiTrack)
+        return dispatch(jitsiTrack);
     };
 }
 

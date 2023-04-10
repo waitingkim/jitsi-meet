@@ -645,7 +645,7 @@ export default {
         // the user inputs their credentials, but the dialog would be
         // overshadowed by the overlay.
         tryCreateLocalTracks.then(tracks => {
-            // console.log('[castis] createInitialLocalTracks tracks ', tracks)
+            console.log('[castis] createInitialLocalTracks tracks ', tracks)
             APP.store.dispatch(mediaPermissionPromptVisibilityChanged(false));
 
             return tracks;

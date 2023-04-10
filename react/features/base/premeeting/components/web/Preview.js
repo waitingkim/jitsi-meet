@@ -37,6 +37,8 @@ export type Props = {
      * The JitsiLocalTrack to display.
      */
     videoTrack: ?Object,
+
+    videoTracks: ?Object,
 };
 
 /**
@@ -46,7 +48,7 @@ export type Props = {
  * @returns {ReactElement}
  */
 function Preview(props: Props) {
-    const { _participantId, flipVideo, name, videoMuted, videoTrack } = props;
+    const { _participantId, flipVideo, name, videoMuted, videoTrack, videoTracks } = props;
     const className = flipVideo ? 'flipVideoX' : '';
 
     useEffect(() => {
@@ -58,6 +60,9 @@ function Preview(props: Props) {
 
         return () => APP.API.notifyPrejoinVideoVisibilityChanged(false);
     }, []);
+
+    console.log('[castis] Preview videoTrack', videoTrack)
+    console.log('[castis] Preview videoTracks', videoTracks)
 
     return (
         <div id = 'preview'>
