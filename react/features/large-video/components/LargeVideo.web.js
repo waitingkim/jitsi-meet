@@ -367,7 +367,7 @@ function _mapStateToProps(state) {
     const isLocalScreenshareOnLargeVideo = largeVideoParticipant?.id?.includes(localParticipantId)
         && videoTrack?.videoType === VIDEO_TYPE.DESKTOP;
     const isOnSpot = defaultLocalDisplayName === SPOT_DISPLAY_NAME;
-
+    // console.log('[castis] LargeVideo videoTrack ', videoTrack)
     return {
         _backgroundAlpha: state['features/base/config'].backgroundAlpha,
         _customBackgroundColor: backgroundColor,

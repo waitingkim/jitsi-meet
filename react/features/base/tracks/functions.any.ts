@@ -186,7 +186,7 @@ export function getLocalJitsiVideoTrack(state: IReduxState) {
  */
 export function getLocalJitsiVideoTracks(state: IReduxState) {
     const tracks = getLocalVideoTracks(getTrackState(state));
-    console.log('[castis] getLocalJitsiVideoTracks track ', APP.store.getState()['features/base/tracks'])
+    //console.log('[castis] getLocalJitsiVideoTracks track ', APP.store.getState()['features/base/tracks'])
 
     // return [track[0]?.jitsiTrack, track[1]?.jitsiTrack];
     return tracks
@@ -240,6 +240,7 @@ export function getTrackByMediaTypeAndParticipant(
         tracks: ITrack[],
         mediaType: MediaType,
         participantId?: string) {
+    // console.log('[castis] getTrackByMediaTypeAndParticipant tracks ', tracks)
     return tracks.find(
         t => Boolean(t.jitsiTrack) && t.participantId === participantId && t.mediaType === mediaType
     );

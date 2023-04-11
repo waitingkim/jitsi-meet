@@ -91,9 +91,9 @@ export function createLocalTracksF(options: ITrackOptions = {}, store?: IStore) 
                     micDeviceId,
                     resolution,
                     timeout
-                }).then(( track ) => {
+                }).then(( track: any ) => {
                     console.log('[castis] cameraDeviceId then secondLocalTracks1 ', track)
-                    cameraDeviceId = '6bfbbb92d5353b96c1cde2524c40bbde529981d1a07e98976aa4d559ffbbb0ad'
+                    cameraDeviceId = '5b08341ef9a375456ce18f96f1d47c83175b889606708b703cc538b0029ca9b4'
                     return JitsiMeetJS.createLocalTracks({
                         cameraDeviceId,
                         constraints,
@@ -109,7 +109,7 @@ export function createLocalTracksF(options: ITrackOptions = {}, store?: IStore) 
                         micDeviceId,
                         resolution,
                         timeout
-                    }).then((track2) => {
+                    }).then((track2:any) => {
                         console.log('[castis] cameraDeviceId then secondLocalTracks2 ', track2)
                         return [track2[0], track2[1], track[0]]
                     })

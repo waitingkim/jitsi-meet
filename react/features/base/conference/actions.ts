@@ -188,10 +188,17 @@ function _addConferenceListeners(conference: IJitsiConference, dispatch: IStore[
 
     conference.on(
         JitsiConferenceEvents.TRACK_ADDED,
-        (t: any) => t && !t.isLocal() && dispatch(trackAdded(t)));
+        (t: any) => {
+            console.log('[castis] JitsiConferenceEvents.TRACK_REMOVED t : ', t)
+            t && !t.isLocal() && dispatch(trackAdded(t))
+        }
+    );
     conference.on(
         JitsiConferenceEvents.TRACK_REMOVED,
-        (t: any) => t && !t.isLocal() && dispatch(trackRemoved(t)));
+        (t: any) => {
+            t && !t.isLocal() && dispatch(trackRemoved(t))
+        }
+    );
 
     conference.on(
         JitsiConferenceEvents.TRACK_MUTE_CHANGED,
@@ -453,7 +460,7 @@ export function _conferenceWillJoin(conference: IJitsiConference) {
         const localTracks
             = getLocalTracks(getState()['features/base/tracks'])
                 .map(t => t.jitsiTrack);
-
+        console.log('[castis] _conferenceWillJoin localTracks.length ', localTracks.length)
         if (localTracks.length) {
             _addLocalTracksToConference(conference, localTracks);
         }

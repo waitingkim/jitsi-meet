@@ -251,7 +251,7 @@ export function joinConference(options?: Object, ignoreJoiningInProgress = false
         localTracks = getLocalTracks(getState()['features/base/tracks']);
 
         const jitsiTracks = localTracks.map((t: any) => t.jitsiTrack);
-
+        console.log('[castis] joinConference jitsiTracks ', jitsiTracks)
         APP.conference.prejoinStart(jitsiTracks);
     };
 }

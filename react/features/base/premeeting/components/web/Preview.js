@@ -61,8 +61,8 @@ function Preview(props: Props) {
         return () => APP.API.notifyPrejoinVideoVisibilityChanged(false);
     }, []);
 
-    console.log('[castis] Preview videoTrack', videoTrack)
-    console.log('[castis] Preview videoTracks', videoTracks)
+    // console.log('[castis] Preview videoTrack', videoTrack)
+    // console.log('[castis] Preview videoTracks', videoTracks)
 
     return (
         <div id = 'preview'>

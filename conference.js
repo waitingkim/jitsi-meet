@@ -725,6 +725,7 @@ export default {
     },
 
     startConference(con, tracks) {
+        console.log('[castis] startConference tracks ', tracks)
         tracks.forEach(track => {
             if ((track.isAudioTrack() && this.isLocalAudioMuted())
                 || (track.isVideoTrack() && this.isLocalVideoMuted())) {
@@ -1404,6 +1405,7 @@ export default {
 
     _createRoom(localTracks) {
         room = connection.initJitsiConference(APP.conference.roomName, this._getConferenceOptions());
+        console.log('[castis] _createRoom room ', room)
 
         // Filter out the tracks that are muted (except on Safari).
         const tracks = browser.isWebKitBased() ? localTracks : localTracks.filter(track => !track.isMuted());
@@ -1431,7 +1433,7 @@ export default {
             } else if (track.isVideoTrack()) {
                 logger.debug(`_setLocalAudioVideoStreams is calling useVideoStream with track: ${track}`);
 
-                return this.useVideoStream(track);
+                return this.useVideosStream(track);
             }
 
             logger.error('Ignored not an audio nor a video track: ', track);
@@ -1462,15 +1464,16 @@ export default {
      */
     useVideoStream(newTrack) {
         const state = APP.store.getState();
-
+        console.log('[castis] useVideoStream newTrack ', newTrack)
         logger.debug(`useVideoStream: ${newTrack}`);
 
         return new Promise((resolve, reject) => {
             _replaceLocalVideoTrackQueue.enqueue(onFinish => {
                 const oldTrack = getLocalJitsiVideoTrack(state);
-
+                console.log('[castis] useVideoStream oldTrack ', oldTrack)
                 logger.debug(`useVideoStream: Replacing ${oldTrack} with ${newTrack}`);
-
+                // console.log('[castis] useVideoStream oldTrack === newTrack ', (oldTrack === newTrack))
+                // console.log('[castis] useVideoStream !oldTrack && !newTrack ', (!oldTrack && !newTrack))
                 if (oldTrack === newTrack || (!oldTrack && !newTrack)) {
                     resolve();
                     onFinish();
@@ -1493,6 +1496,47 @@ export default {
                         reject(error);
                     })
                     .then(onFinish);
+            });
+        });
+    },
+
+    /**
+     * Start using provided video stream.
+     * Stops previous video stream.
+     * @param {JitsiLocalTrack} newTrack - new track to use or null
+     * @returns {Promise}
+     */
+    useVideosStream(newTrack) {
+        const state = APP.store.getState();
+        console.log('[castis] useVideosStream newTrack ', newTrack)
+        logger.debug(`useVideosStream: ${newTrack}`);
+
+        return new Promise((resolve, reject) => {
+            _replaceLocalVideoTrackQueue.enqueue(onFinish => {
+                const oldTrack = getLocalJitsiVideoTrack(state);
+                console.log('[castis] useVideosStream oldTrack ', oldTrack)
+                logger.debug(`useVideosStream: Replacing ${oldTrack} with ${newTrack}`);
+                // console.log('[castis] useVideoStream oldTrack === newTrack ', (oldTrack === newTrack))
+                // console.log('[castis] useVideoStream !oldTrack && !newTrack ', (!oldTrack && !newTrack))
+                if (oldTrack === newTrack || (!oldTrack && !newTrack)) {
+                    resolve();
+                    onFinish();
+                    return;
+                }
+
+                // Add the track to the conference if there is no existing track, replace it otherwise.
+                // const trackAction = addLocalTrack(newTrack)
+
+                // APP.store.dispatch(trackAction)
+                //     .then(() => {
+                //         this.setVideoMuteStatus();
+                //     })
+                //     .then(resolve)
+                //     .catch(error => {
+                //         logger.error(`useVideoStream failed: ${error}`);
+                //         reject(error);
+                //     })
+                //     .then(onFinish);
             });
         });
     },
@@ -1839,10 +1883,13 @@ export default {
         });
 
         room.on(JitsiConferenceEvents.TRACK_ADDED, track => {
+            console.log('[castis] JitsiConferenceEvents.TRACK_ADDED track ', track)
+            console.log('[castis] JitsiConferenceEvents.TRACK_ADDED track.isLocal() ', track.isLocal())
             if (!track || track.isLocal()) {
                 return;
             }
 
+            console.log('[castis] JitsiConferenceEvents.TRACK_ADDED config.iAmRecorder ', config.iAmRecorder)
             if (config.iAmRecorder) {
                 const participant = room.getParticipantById(track.getParticipantId());
 

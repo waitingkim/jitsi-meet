@@ -99,7 +99,7 @@ export type ITracksState = ITrack[];
  * Listen for actions that mutate (e.g. Add, remove) local and remote tracks.
  */
 ReducerRegistry.register<ITracksState>('features/base/tracks', (state = [], action): ITracksState => {
-    console.log('[castis] action.type', action)
+    //console.log('[castis] action.type', action)
     switch (action.type) {
     case PARTICIPANT_ID_CHANGED:
     case TRACK_NO_DATA_FROM_SOURCE:
