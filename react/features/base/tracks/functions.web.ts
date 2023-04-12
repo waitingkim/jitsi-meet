@@ -5,9 +5,10 @@ import JitsiMeetJS from '../lib-jitsi-meet';
 import { setAudioMuted } from '../media/actions';
 import { toState } from '../redux/functions';
 import {
+    getUserCameraDevices, getUserSecondCameraDeviceId,
     getUserSelectedCameraDeviceId,
-    getUserSelectedMicDeviceId
-} from '../settings/functions.web';
+    getUserSelectedMicDeviceId, isAloneSelectedCamera
+} from '../settings/functions.web'
 
 import loadEffects from './loadEffects';
 import logger from './logger';
@@ -48,10 +49,16 @@ export function createLocalTracksF(options: ITrackOptions = {}, store?: IStore) 
     store = store || APP.store; // eslint-disable-line no-param-reassign
 
     const state = store.getState();
+    const isAlone = isAloneSelectedCamera(state)
+    // const cameraDevices = getUserCameraDevices(state);
 
+    console.log('[castis] createLocalTracksF state ', state)
+
+    // videoInput?: MediaDeviceInfo[];
     if (typeof cameraDeviceId === 'undefined' || cameraDeviceId === null) {
         cameraDeviceId = getUserSelectedCameraDeviceId(state);
     }
+
     if (typeof micDeviceId === 'undefined' || micDeviceId === null) {
         micDeviceId = getUserSelectedMicDeviceId(state);
     }
@@ -69,11 +76,6 @@ export function createLocalTracksF(options: ITrackOptions = {}, store?: IStore) 
             // Filter any undefined values returned by Promise.resolve().
             const effects = effectsArray.filter(effect => Boolean(effect));
             console.log('[castis] cameraDeviceId cameraDeviceId ', cameraDeviceId)
-            console.log('[castis] cameraDeviceId options.devices ', options.devices)
-            console.log('[castis] cameraDeviceId devices?.slice(0) ', options.devices?.slice(0))
-
-
-
 
             return JitsiMeetJS.createLocalTracks(
                 {
@@ -84,7 +86,7 @@ export function createLocalTracksF(options: ITrackOptions = {}, store?: IStore) 
                     desktopSharingSources,
 
                     // Copy array to avoid mutations inside library.
-                    devices: ['video'],
+                    devices: options.devices?.slice(0),
                     effects,
                     firefox_fake_device, // eslint-disable-line camelcase
                     firePermissionPromptIsShownEvent,
@@ -92,27 +94,40 @@ export function createLocalTracksF(options: ITrackOptions = {}, store?: IStore) 
                     resolution,
                     timeout
                 }).then(( track: any ) => {
-                    console.log('[castis] cameraDeviceId then secondLocalTracks1 ', track)
-                    cameraDeviceId = '5b08341ef9a375456ce18f96f1d47c83175b889606708b703cc538b0029ca9b4'
-                    return JitsiMeetJS.createLocalTracks({
-                        cameraDeviceId,
-                        constraints,
-                        desktopSharingFrameRate,
-                        desktopSharingSourceDevice,
-                        desktopSharingSources,
+                    console.log('[castis] cameraDeviceId then secondLocalTracks1 isAlone :' + isAlone, track)
 
-                        // Copy array to avoid mutations inside library.
-                        devices: options.devices?.slice(0),
-                        effects,
-                        firefox_fake_device, // eslint-disable-line camelcase
-                        firePermissionPromptIsShownEvent,
-                        micDeviceId,
-                        resolution,
-                        timeout
-                    }).then((track2:any) => {
-                        console.log('[castis] cameraDeviceId then secondLocalTracks2 ', track2)
-                        return [track2[0], track2[1], track[0]]
-                    })
+                    if(isAlone) {
+                        return track
+                    } else {
+                        // VIDOE track 가져와서 id를 넣어 줘야 함.
+                        cameraDeviceId = getUserSecondCameraDeviceId(state, track[1].deviceId)
+                        console.log('[castis] cameraDeviceId then getUserSecondCameraDeviceId(state)', cameraDeviceId)
+                        return JitsiMeetJS.createLocalTracks({
+                            cameraDeviceId,
+                            constraints,
+                            desktopSharingFrameRate,
+                            desktopSharingSourceDevice,
+                            desktopSharingSources,
+
+                            // Copy array to avoid mutations inside library.
+                            devices: ['video'],
+                            effects,
+                            firefox_fake_device, // eslint-disable-line camelcase
+                            firePermissionPromptIsShownEvent,
+                            micDeviceId,
+                            resolution,
+                            timeout
+                        }).then((track2:any) => {
+                            console.log('[castis] cameraDeviceId then secondLocalTracks2 ', track2)
+
+                            // tracks.map(track => {
+                            //     return Promise.resolve();
+                            // });
+
+                            return [track[0], track[1], track2[0]]
+                        })
+                    }
+
                 }
             ).catch((err: Error) => {
                 logger.error('Failed to create local tracks', options.devices, err);

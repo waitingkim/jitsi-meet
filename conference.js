@@ -1410,7 +1410,7 @@ export default {
         // Filter out the tracks that are muted (except on Safari).
         const tracks = browser.isWebKitBased() ? localTracks : localTracks.filter(track => !track.isMuted());
 
-        this._setLocalAudioVideoStreams(tracks);
+        // this._setLocalAudioVideoStreams(tracks);
         this._room = room; // FIXME do not use this
 
         APP.store.dispatch(_conferenceWillJoin(room));
@@ -1525,18 +1525,18 @@ export default {
                 }
 
                 // Add the track to the conference if there is no existing track, replace it otherwise.
-                // const trackAction = addLocalTrack(newTrack)
+                const trackAction = addLocalTrack(newTrack)
 
-                // APP.store.dispatch(trackAction)
-                //     .then(() => {
-                //         this.setVideoMuteStatus();
-                //     })
-                //     .then(resolve)
-                //     .catch(error => {
-                //         logger.error(`useVideoStream failed: ${error}`);
-                //         reject(error);
-                //     })
-                //     .then(onFinish);
+                APP.store.dispatch(trackAction)
+                    .then(() => {
+                        this.setVideoMuteStatus();
+                    })
+                    .then(resolve)
+                    .catch(error => {
+                        logger.error(`useVideoStream failed: ${error}`);
+                        reject(error);
+                    })
+                    .then(onFinish);
             });
         });
     },

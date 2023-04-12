@@ -69,17 +69,18 @@ export function getDisplayName(state: IReduxState): string {
  * @returns {string}
  */
 export function getUserSelectedCameraDeviceId(stateful: IStateful) {
-    console.log('[castis] getUserSelectedCameraDeviceId stateful ', stateful)
     const state = toState(stateful);
     const {
         userSelectedCameraDeviceId,
         userSelectedCameraDeviceLabel
     } = state['features/base/settings'];
+
+    // console.log('[castis] getUserSelectedCameraDeviceId state ', state)
+
     const { videoInput } = state['features/base/devices'].availableDevices;
     console.log('[castis] getUserSelectedCameraDeviceId videoInput ', videoInput)
     return _getUserSelectedDeviceId({
         availableDevices: videoInput,
-
         // Operating systems may append " #{number}" somewhere in the label so
         // find and strip that bit.
         matchRegex: /\s#\d*(?!.*\s#\d*)/,
@@ -87,6 +88,51 @@ export function getUserSelectedCameraDeviceId(stateful: IStateful) {
         userSelectedDeviceLabel: userSelectedCameraDeviceLabel,
         replacement: ''
     });
+}
+
+export function getUserSecondCameraDeviceId(stateful: IStateful, cameraDeviceId:string) {
+    const state = toState(stateful);
+    const {
+        userSelectedCameraDeviceId,
+        userSelectedCameraDeviceLabel
+    } = state['features/base/settings'];
+
+    const { videoInput } = state['features/base/devices'].availableDevices;
+    return _getUserSecondDeviceId({
+        availableDevices: videoInput,
+        // Operating systems may append " #{number}" somewhere in the label so
+        // find and strip that bit.
+        matchRegex: /\s#\d*(?!.*\s#\d*)/,
+        userSelectedDeviceId: cameraDeviceId,
+        userSelectedDeviceLabel: userSelectedCameraDeviceLabel,
+        replacement: ''
+    });
+}
+
+export function isAloneSelectedCamera(stateful: IStateful) {
+    const state = toState(stateful);
+    const { videoInput } = state['features/base/devices'].availableDevices;
+    return (videoInput.length === 1)
+}
+
+/**
+ * Searches known devices for a matching deviceId and fall back to matching on
+ * label. Returns the stored preferred cameraDeviceId if a match is not found.
+ *
+ * @param {Object|Function} stateful - The redux state object or
+ * {@code getState} function.
+ * @returns {string}
+ */
+export function getUserCameraDevices(stateful: IStateful) {
+    const state = toState(stateful);
+    const {
+        userSelectedCameraDeviceId,
+        userSelectedCameraDeviceLabel
+    } = state['features/base/settings'];
+
+    const { videoInput } = state['features/base/devices'].availableDevices;
+    console.log('[castis] getUserSelectedCameraDeviceId videoInput ', videoInput)
+    return videoInput
 }
 
 /**
@@ -182,6 +228,7 @@ function _getUserSelectedDeviceId(options: {
     // If there is no label at all, there is no need to fall back to checking
     // the label for a fuzzy match.
     if (!userSelectedDeviceLabel || !userSelectedDeviceId) {
+        console.log('[castis] _getUserSelectedDeviceId userSelectedDeviceId 1 ', userSelectedDeviceId)
         return userSelectedDeviceId;
     }
 
@@ -190,12 +237,60 @@ function _getUserSelectedDeviceId(options: {
 
     // Prioritize matching the deviceId
     if (foundMatchingBasedonDeviceId) {
+        console.log('[castis] _getUserSelectedDeviceId userSelectedDeviceId 2 ', userSelectedDeviceId)
         return userSelectedDeviceId;
     }
 
     const strippedDeviceLabel
         = matchRegex ? userSelectedDeviceLabel.replace(matchRegex, replacement)
             : userSelectedDeviceLabel;
+    const foundMatchBasedOnLabel = availableDevices?.find(candidate => {
+        const { label } = candidate;
+
+        if (!label) {
+            return false;
+        } else if (strippedDeviceLabel === label) {
+            return true;
+        }
+
+        const strippedCandidateLabel
+            = label.replace(matchRegex, replacement);
+
+        return strippedDeviceLabel === strippedCandidateLabel;
+    });
+
+    console.log('[castis] _getUserSelectedDeviceId foundMatchBasedOnLabel.deviceId 3 ', foundMatchBasedOnLabel.deviceId)
+    console.log('[castis] _getUserSelectedDeviceId foundMatchBasedOnLabel.deviceId 4 ', userSelectedDeviceId)
+    return foundMatchBasedOnLabel
+        ? foundMatchBasedOnLabel.deviceId : userSelectedDeviceId;
+}
+
+function _getUserSecondDeviceId(options: {
+    availableDevices: MediaDeviceInfo[] | undefined;
+    matchRegex?: RegExp;
+    replacement?: string;
+    userSelectedDeviceId?: string;
+    userSelectedDeviceLabel?: string;
+}) {
+    const {
+        availableDevices,
+        matchRegex = '',
+        userSelectedDeviceId,
+        userSelectedDeviceLabel,
+        replacement = ''
+    } = options;
+
+    const foundMatchingBasedonDeviceId = availableDevices?.find(
+        candidate => candidate.deviceId !== userSelectedDeviceId);
+
+    // Prioritize matching the deviceId
+    if (foundMatchingBasedonDeviceId) {
+        return foundMatchingBasedonDeviceId.deviceId;
+    }
+
+    const strippedDeviceLabel
+        = matchRegex ? userSelectedDeviceLabel.replace(matchRegex, replacement)
+        : userSelectedDeviceLabel;
     const foundMatchBasedOnLabel = availableDevices?.find(candidate => {
         const { label } = candidate;
 

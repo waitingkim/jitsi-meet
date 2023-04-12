@@ -81,10 +81,13 @@ export default class LargeVideoManager {
         // FIXME: We are passing resizeContainer as parameter which is calling
         // Container.resize. Probably there's better way to implement this.
         this.videoContainer = new VideoContainer(() => this.resizeContainer(VIDEO_CONTAINER_TYPE));
+        this.videoContainer2 = new VideoContainer(() => this.resizeContainer(VIDEO_CONTAINER_TYPE));
         this.addContainer(VIDEO_CONTAINER_TYPE, this.videoContainer);
+        this.addContainer('VIDEO_CONTAINER_TYPE', this.videoContainer2);
 
         // use the same video container to handle desktop tracks
         this.addContainer(DESKTOP_CONTAINER_TYPE, this.videoContainer);
+        this.addContainer('DESKTOP_CONTAINER_TYPE', this.videoContainer2);
 
         /**
          * The preferred width passed as an argument to {@link updateContainerSize}.
@@ -127,6 +130,7 @@ export default class LargeVideoManager {
          * @type {Object}
          */
         this.videoTrack = undefined;
+        this.videoTrack2 = undefined;
 
         this.container = document.getElementById('largeVideoContainer');
 
@@ -488,9 +492,9 @@ export default class LargeVideoManager {
      * @param {boolean} [animate=false] if resize process should be animated.
      */
     resizeContainer(type, animate = false) {
-        const container = this.getContainer(type);
-
-        container.resize(this.width, this.height, animate);
+        console.log('[castis] LargeVideoManager resizeContainer')
+        // const container = this.getContainer(type);
+        // container.resize(this.width, this.height, animate);
     }
 
     /**
@@ -498,9 +502,10 @@ export default class LargeVideoManager {
      * @param {boolean} animate if resize process should be animated.
      */
     resize(animate) {
+        console.log('[castis] LargeVideoManager resize')
         // resize all containers
-        Object.keys(this.containers)
-            .forEach(type => this.resizeContainer(type, animate));
+        // Object.keys(this.containers)
+        //     .forEach(type => this.resizeContainer(type, animate));
     }
 
     /**

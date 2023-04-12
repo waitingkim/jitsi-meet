@@ -221,7 +221,7 @@ class LargeVideo extends Component<Props> {
                 <div id = 'remotePresenceMessage' />
                 <span id = 'remoteConnectionMessage' />
                 <div id = 'largeVideoElementsContainer'>
-                    <div id = 'largeVideoBackgroundContainer' />
+                    <div id = 'largeVideoBackgroundContainer' style={{visibility:'hidden'}} />
                     {/*
                       * FIXME: the architecture of elements related to the large
                       * video and the naming. The background is not part of

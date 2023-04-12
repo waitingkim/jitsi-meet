@@ -23,6 +23,7 @@ export function captureLargeVideoScreenshot() {
             return promise;
         }
         const tracks = state['features/base/tracks'];
+        console.log('[castis] captureLargeVideoScreenshot ', tracks)
         const participantTrack = getTrackByMediaTypeAndParticipant(tracks, MEDIA_TYPE.VIDEO, largeVideo.participantId);
 
         // Participants that join the call video muted do not have a jitsiTrack attached.
