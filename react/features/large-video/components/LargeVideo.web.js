@@ -233,22 +233,170 @@ class LargeVideo extends Component<Props> {
                     <div
                         id = 'largeVideoWrapper'
                         onTouchEnd = { this._onDoubleTap }
+                        style={{backgroundColor:'#13171B'}}
                         ref = { this._wrapperRef }
                         role = 'figure' >
                         { _displayScreenSharingPlaceholder ? <ScreenSharePlaceholder /> :
                             <div>
-                                <video
-                                    autoPlay = { !_noAutoPlayVideo }
-                                    id = 'largeVideo'
-                                    muted = { true }
-                                    playsInline = { true } /* for Safari on iOS to work */
-                                />
-                                <video
-                                    autoPlay = { !_noAutoPlayVideo }
-                                    id = 'secondVideo'
-                                    muted = { true }
-                                    playsInline = { true } /* for Safari on iOS to work */
-                                />
+                                <div style={{height:'80px', width:'100%', position:'absolute', top:'0px', backgroundColor:'#2D2D2D'}}>
+                                    <div className={'room_head_button'} style={{
+                                        boxSizing: 'border-box',
+                                        width: '48px',
+                                        height: '36px',
+                                        left: '0px',
+                                        top: '2px',
+                                        background: '#03041F',
+                                        border: '1px solid #FFFFFF',
+                                        borderRadius: '6px',
+                                        float: 'right',
+                                        marginTop: '22px',
+                                        marginRight: '20px',
+                                        position: 'relative'}}>
+                                        <div style={{
+                                            width: '10.87px',
+                                            height: '8.1px',
+                                            left: '5.25px',
+                                            top: '8.25px',
+                                            background: '#656769',
+                                            borderRadius: '2px',
+                                            position: 'absolute'
+                                        }}/>
+                                        <div style={{
+                                            width: '24.02px',
+                                            height: '13.5px',
+                                            left: '18.5px',
+                                            top: '12.25px',
+                                            background: '#656769',
+                                            borderRadius: '2px',
+                                            position: 'absolute'
+                                        }}/>
+                                    </div>
+                                    <div style={{
+                                        boxSizing: 'border-box',
+                                        width: '48px',
+                                        height: '36px',
+                                        left: '0px',
+                                        top: '2px',
+                                        background: '#03041F',
+                                        border: '1px solid #FFFFFF',
+                                        borderRadius: '6px',
+                                        float: 'right',
+                                        marginTop: '22px',
+                                        marginRight: '16px',
+                                        position: 'relative'}}>
+                                        <div style={{
+                                            width: '19.02px',
+                                            height: '10.8px',
+                                            left: '6.25px',
+                                            top: '5.3px',
+                                            background: '#656769',
+                                            borderRadius: '2px',
+                                            position: 'absolute'
+                                        }}/>
+                                        <div style={{
+                                            width: '10.87px',
+                                            height: '8.1px',
+                                            left: '29.34px',
+                                            top: '5.3px',
+                                            background: '#656769',
+                                            borderRadius: '2px',
+                                            position: 'absolute'
+                                        }}/>
+                                        <div style={{
+                                            width: '19.02px',
+                                            height: '10.8px',
+                                            left: '22.19px',
+                                            top: '18.45px',
+                                            background: '#656769',
+                                            borderRadius: '2px',
+                                            position: 'absolute'
+                                        }}/>
+                                    </div>
+                                    <div style={{
+                                        boxSizing: 'border-box',
+                                        width: '48px',
+                                        height: '36px',
+                                        left: '0px',
+                                        top: '2px',
+                                        background: '#03041F',
+                                        border: '1px solid #FFFFFF',
+                                        borderRadius: '6px',
+                                        float: 'right',
+                                        marginTop: '22px',
+                                        marginRight: '16px',
+                                        position: 'relative'}}>
+                                        <div style={{
+                                            width: '19.02px',
+                                            height: '10.8px',
+                                            left: '6.25px',
+                                            top: '5.3px',
+                                            background: '#656769',
+                                            borderRadius: '2px',
+                                            position: 'absolute'
+                                        }}/>
+                                        <div style={{
+                                            width: '10.87px',
+                                            height: '8.1px',
+                                            left: '29.34px',
+                                            top: '5.3px',
+                                            background: '#656769',
+                                            borderRadius: '2px',
+                                            position: 'absolute'
+                                        }}/>
+                                        <div style={{
+                                            width: '10.87px',
+                                            height: '8.1px',
+                                            left: '6.25px',
+                                            top: '21.15px',
+                                            background: '#656769',
+                                            borderRadius: '2px',
+                                            position: 'absolute'
+                                        }}/>
+                                        <div style={{
+                                            width: '19.02px',
+                                            height: '10.8px',
+                                            left: '22.19px',
+                                            top: '18.45px',
+                                            background: '#656769',
+                                            borderRadius: '2px',
+                                            position: 'absolute'
+                                        }}/>
+                                    </div>
+                                </div>
+                                <div style={{marginTop:'95px', display: 'flex', alignItems: 'center'}}>
+                                    <div style={{width:'50%'}}>
+                                        <video
+                                            style={{borderRadius:'24px', width:'95%'}}
+                                            autoPlay = { !_noAutoPlayVideo }
+                                            id = 'largeVideo'
+                                            muted = { true }
+                                            playsInline = { true } /* for Safari on iOS to work */
+                                        />
+                                        <video
+                                            style={{borderRadius:'24px', marginTop:'2%', width:'48%'}}
+                                            autoPlay = { !_noAutoPlayVideo }
+                                            id = 'secondVideo'
+                                            muted = { true }
+                                            playsInline = { true } /* for Safari on iOS to work */
+                                        />
+                                    </div>
+                                    <div style={{width:'50%'}}>
+                                        <video
+                                            style={{borderRadius:'24px', width:'48%'}}
+                                            autoPlay = { !_noAutoPlayVideo }
+                                            id = 'remoteFaceVideo'
+                                            muted = { true }
+                                            playsInline = { true } /* for Safari on iOS to work */
+                                        />
+                                        <video
+                                            style={{borderRadius:'24px', width:'95%', marginTop:'2%',}}
+                                            autoPlay = { !_noAutoPlayVideo }
+                                            id = 'remoteDeskVideo'
+                                            muted = { true }
+                                            playsInline = { true } /* for Safari on iOS to work */
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         }
                     </div>

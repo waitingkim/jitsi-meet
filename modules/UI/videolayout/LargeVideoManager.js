@@ -44,6 +44,8 @@ import { createDeferred } from '../../util/helpers';
 import AudioLevels from '../audio_levels/AudioLevels';
 
 import {
+    REMOTE_DESK_CONTAINER_TYPE,
+    REMOTE_FACE_CONTAINER_TYPE,
     SECOND_VIDEO_CONTAINER_TYPE,
     VIDEO_CONTAINER_TYPE,
     VideoContainer
@@ -84,13 +86,19 @@ export default class LargeVideoManager {
 
         this.state = VIDEO_CONTAINER_TYPE;
         this.secondState = SECOND_VIDEO_CONTAINER_TYPE;
+        this.remoteFaceState = REMOTE_FACE_CONTAINER_TYPE;
+        this.remoteDeskState = REMOTE_DESK_CONTAINER_TYPE;
 
         // FIXME: We are passing resizeContainer as parameter which is calling
         // Container.resize. Probably there's better way to implement this.
         this.videoContainer = new VideoContainer(() => this.resizeContainer(VIDEO_CONTAINER_TYPE), 'largeVideo');
         this.secondVideoContainer = new VideoContainer(() => this.resizeContainer(VIDEO_CONTAINER_TYPE), 'secondVideo');
+        this.remoteFaceContainer = new VideoContainer(() => this.resizeContainer(REMOTE_FACE_CONTAINER_TYPE), 'remoteFaceVideo');
+        this.remoteDeskContainer = new VideoContainer(() => this.resizeContainer(REMOTE_DESK_CONTAINER_TYPE), 'remoteDeskVideo');
         this.addContainer(VIDEO_CONTAINER_TYPE, this.videoContainer);
         this.addContainer(SECOND_VIDEO_CONTAINER_TYPE, this.secondVideoContainer);
+        this.addContainer(REMOTE_FACE_CONTAINER_TYPE, this.remoteFaceContainer);
+        this.addContainer(REMOTE_DESK_CONTAINER_TYPE, this.remoteDeskContainer);
 
         // use the same video container to handle desktop tracks
         this.addContainer(DESKTOP_CONTAINER_TYPE, this.videoContainer);
@@ -265,6 +273,8 @@ export default class LargeVideoManager {
             // eslint-disable-next-line no-shadow
             const container = this.getCurrentContainer();
             const secondContainer = this.getSecondContainer();
+            const remoteFaceContainer = this.getContainer(this.remoteFaceState);
+            const remoteDeskContainer = this.getContainer(this.remoteDeskState);
 
             if (shouldHideSelfView && localId === id) {
                 return container.hide();
@@ -273,6 +283,8 @@ export default class LargeVideoManager {
 
             secondContainer.setStream(id, secondStream, videoType);
             container.setStream(id, stream, videoType);
+            remoteFaceContainer.setStream(id, secondStream, videoType);
+            remoteDeskContainer.setStream(id, stream, videoType);
 
             // change the avatar url on large
             this.updateAvatar();

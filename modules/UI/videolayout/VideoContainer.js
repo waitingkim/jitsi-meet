@@ -19,6 +19,9 @@ import LargeContainer from './LargeContainer';
 // FIXME should be 'video'
 export const VIDEO_CONTAINER_TYPE = 'camera';
 export const SECOND_VIDEO_CONTAINER_TYPE = 'second_camera';
+
+export const REMOTE_FACE_CONTAINER_TYPE = 'remote_face_camera';
+export const REMOTE_DESK_CONTAINER_TYPE = 'remote_desk_camera';
 // Corresponds to animation duration from the animatedFadeIn and animatedFadeOut CSS classes.
 const FADE_DURATION_MS = 300;
 
