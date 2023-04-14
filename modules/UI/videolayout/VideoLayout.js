@@ -10,7 +10,7 @@ import {
 } from '../../../react/features/base/participants';
 import {
     getTrackByMediaTypeAndParticipant,
-    getVideoTrackByParticipant
+    getVideoTrackByParticipant, getVideoTrackBySecond
 } from '../../../react/features/base/tracks';
 
 import LargeVideoManager from './LargeVideoManager';
@@ -156,6 +156,7 @@ const VideoLayout = {
     },
 
     updateLargeVideo(id, forceUpdate, forceStreamToReattach = false) {
+        console.log('[castis] updateLargeVideo id ', id)
         if (!largeVideo) {
             return;
         }
@@ -166,9 +167,15 @@ const VideoLayout = {
         const participant = getParticipantById(state, id);
         const videoTrack = getVideoTrackByParticipant(state, participant);
         const videoStream = videoTrack?.jitsiTrack;
+        const secondVideoTrack = getVideoTrackBySecond(state, participant);
+        const secondStream = secondVideoTrack?.jitsiTrack;
 
         if (videoStream && forceStreamToReattach) {
             videoStream.forceStreamToReattach = forceStreamToReattach;
+        }
+
+        if (secondStream && forceStreamToReattach) {
+            secondStream.forceStreamToReattach = forceStreamToReattach;
         }
 
         if (isOnLarge && !forceUpdate
@@ -186,11 +193,15 @@ const VideoLayout = {
 
         if (!isOnLarge || forceUpdate) {
             const videoType = this.getRemoteVideoType(id);
-
+            console.log('[castis] largeVideo updateLargeVideo videoStream ', videoStream)
+            if(secondStream){
+                console.log('[castis] largeVideo updateLargeVideo secondStream ', secondStream)
+                largeVideo.updateSecondLargeVideo(id, secondStream, videoType || VIDEO_TYPE.CAMERA).catch(()=>{})
+            }
             largeVideo.updateLargeVideo(
                 id,
                 videoStream,
-                videoType || VIDEO_TYPE.CAMERA
+                videoType || VIDEO_TYPE.CAMERA,
             ).catch(() => {
                 // do nothing
             });

@@ -235,11 +235,22 @@ class LargeVideo extends Component<Props> {
                         onTouchEnd = { this._onDoubleTap }
                         ref = { this._wrapperRef }
                         role = 'figure' >
-                        { _displayScreenSharingPlaceholder ? <ScreenSharePlaceholder /> : <video
-                            autoPlay = { !_noAutoPlayVideo }
-                            id = 'largeVideo'
-                            muted = { true }
-                            playsInline = { true } /* for Safari on iOS to work */ /> }
+                        { _displayScreenSharingPlaceholder ? <ScreenSharePlaceholder /> :
+                            <div>
+                                <video
+                                    autoPlay = { !_noAutoPlayVideo }
+                                    id = 'largeVideo'
+                                    muted = { true }
+                                    playsInline = { true } /* for Safari on iOS to work */
+                                />
+                                <video
+                                    autoPlay = { !_noAutoPlayVideo }
+                                    id = 'secondVideo'
+                                    muted = { true }
+                                    playsInline = { true } /* for Safari on iOS to work */
+                                />
+                            </div>
+                        }
                     </div>
                 </div>
                 { interfaceConfig.DISABLE_TRANSCRIPTION_SUBTITLES

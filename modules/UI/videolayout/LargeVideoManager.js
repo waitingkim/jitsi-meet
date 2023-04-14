@@ -43,16 +43,22 @@ import { shouldDisplayTileView } from '../../../react/features/video-layout';
 import { createDeferred } from '../../util/helpers';
 import AudioLevels from '../audio_levels/AudioLevels';
 
-import { VIDEO_CONTAINER_TYPE, VideoContainer } from './VideoContainer';
+import {
+    SECOND_VIDEO_CONTAINER_TYPE,
+    VIDEO_CONTAINER_TYPE,
+    VideoContainer
+} from './VideoContainer';
 
 const logger = Logger.getLogger(__filename);
 
 const DESKTOP_CONTAINER_TYPE = 'desktop';
+const SECOND_DESKTOP_CONTAINER_TYPE = 'second_desktop';
 
 /**
  * Manager for all Large containers.
  */
 export default class LargeVideoManager {
+    _secondStream: null;
     /**
      * Checks whether given container is a {@link VIDEO_CONTAINER_TYPE}.
      * FIXME currently this is a workaround for the problem where video type is
@@ -77,17 +83,18 @@ export default class LargeVideoManager {
         this.containers = {};
 
         this.state = VIDEO_CONTAINER_TYPE;
+        this.secondState = SECOND_VIDEO_CONTAINER_TYPE;
 
         // FIXME: We are passing resizeContainer as parameter which is calling
         // Container.resize. Probably there's better way to implement this.
-        this.videoContainer = new VideoContainer(() => this.resizeContainer(VIDEO_CONTAINER_TYPE));
-        this.videoContainer2 = new VideoContainer(() => this.resizeContainer(VIDEO_CONTAINER_TYPE));
+        this.videoContainer = new VideoContainer(() => this.resizeContainer(VIDEO_CONTAINER_TYPE), 'largeVideo');
+        this.secondVideoContainer = new VideoContainer(() => this.resizeContainer(VIDEO_CONTAINER_TYPE), 'secondVideo');
         this.addContainer(VIDEO_CONTAINER_TYPE, this.videoContainer);
-        this.addContainer('VIDEO_CONTAINER_TYPE', this.videoContainer2);
+        this.addContainer(SECOND_VIDEO_CONTAINER_TYPE, this.secondVideoContainer);
 
         // use the same video container to handle desktop tracks
         this.addContainer(DESKTOP_CONTAINER_TYPE, this.videoContainer);
-        this.addContainer('DESKTOP_CONTAINER_TYPE', this.videoContainer2);
+        this.addContainer(SECOND_DESKTOP_CONTAINER_TYPE, this.secondVideoContainer);
 
         /**
          * The preferred width passed as an argument to {@link updateContainerSize}.
@@ -220,7 +227,7 @@ export default class LargeVideoManager {
      *
      */
     scheduleLargeVideoUpdate() {
-        if (this.updateInProcess || !this.newStreamData) {
+        if (this.updateInProcess || !this.newStreamData || !this.newSecondStreamData) {
             return;
         }
 
@@ -232,8 +239,14 @@ export default class LargeVideoManager {
         const isUserSwitch = this.newStreamData.id !== container.id;
         const preUpdate = isUserSwitch ? container.hide() : Promise.resolve();
 
+        const getSecondStream = () => {
+            const { stream } = this.newSecondStreamData;
+          return stream
+        }
+
         preUpdate.then(() => {
             const { id, stream, videoType, resolve } = this.newStreamData;
+            const secondStream = getSecondStream()
             const state = APP.store.getState();
             const shouldHideSelfView = getHideSelfView(state);
             const localId = getLocalParticipant(state)?.id;
@@ -245,16 +258,20 @@ export default class LargeVideoManager {
             const isVideoContainer = LargeVideoManager.isVideoContainer(videoType);
 
             this.newStreamData = null;
+            // this.newSecondStreamData = null;
 
             logger.debug(`Scheduled large video update for ${id}`);
             this.state = videoType;
             // eslint-disable-next-line no-shadow
             const container = this.getCurrentContainer();
+            const secondContainer = this.getSecondContainer();
 
             if (shouldHideSelfView && localId === id) {
                 return container.hide();
             }
+            console.log('[castis] scheduleLargeVideoUpdate secondStream ', secondStream)
 
+            secondContainer.setStream(id, secondStream, videoType);
             container.setStream(id, stream, videoType);
 
             // change the avatar url on large
@@ -434,6 +451,8 @@ export default class LargeVideoManager {
      * @returns {Promise}
      */
     updateLargeVideo(userID, stream, videoType) {
+        console.log('[castis] LargeVideoManager updateLargeVideo userID ', userID)
+        console.log('[castis] LargeVideoManager updateLargeVideo stream ', stream)
         if (this.newStreamData) {
             this.newStreamData.reject();
         }
@@ -447,6 +466,32 @@ export default class LargeVideoManager {
 
         return this.newStreamData.promise;
     }
+
+    /**
+     * Update large video.
+     * Switches to large video even if previously other container was visible.
+     * @param userID the userID of the participant associated with the stream
+     * @param {JitsiTrack?} stream new stream
+     * @param {string?} videoType new video type
+     * @returns {Promise}
+     */
+    updateSecondLargeVideo(userID, stream, videoType) {
+        console.log('[castis] LargeVideoManager updateSecondLargeVideo userID ', userID)
+        console.log('[castis] LargeVideoManager updateSecondLargeVideo stream ', stream)
+        if (this.newSecondStreamData) {
+            this.newSecondStreamData.reject();
+        }
+
+        this.newSecondStreamData = createDeferred();
+        this.newSecondStreamData.id = userID;
+        this.newSecondStreamData.stream = stream;
+        this.newSecondStreamData.videoType = videoType;
+
+        // this.scheduleLargeVideoUpdate();
+        console.log('[castis] LargeVideoManager updateSecondLargeVideo this.newSecondStreamData ', this.newSecondStreamData)
+        return this.newSecondStreamData.promise;
+    }
+
 
     /**
      * Update container size.
@@ -677,6 +722,18 @@ export default class LargeVideoManager {
      */
     getCurrentContainer() {
         return this.getContainer(this.state);
+    }
+
+    /**
+     * Returns {@link LargeContainer} for the current {@link state}
+     *
+     * @return {LargeContainer}
+     *
+     * @throws an <tt>Error</tt> if there is no container for the current
+     * {@link state}.
+     */
+    getSecondContainer() {
+        return this.getContainer(this.secondState);
     }
 
     /**

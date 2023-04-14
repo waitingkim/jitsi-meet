@@ -203,11 +203,13 @@ const PreMeetingScreen = ({
             <Preview
                 videoMuted = { videoMuted }
                 videoTrack = { videoTracks[1]?.jitsiTrack }
-                videoTracks = { videoTracks }/>
+                videoTracks = { videoTracks }
+                isMaster = {true}/>
             <Preview
                 videoMuted = { videoMuted }
                 videoTrack = { videoTracks[2]?.jitsiTrack  }
-                videoTracks = { videoTracks }/>
+                videoTracks = { videoTracks }
+                isMaster = {false}/>
         </div>
     );
 };

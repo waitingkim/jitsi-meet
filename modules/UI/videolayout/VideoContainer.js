@@ -18,7 +18,7 @@ import LargeContainer from './LargeContainer';
 
 // FIXME should be 'video'
 export const VIDEO_CONTAINER_TYPE = 'camera';
-
+export const SECOND_VIDEO_CONTAINER_TYPE = 'second_camera';
 // Corresponds to animation duration from the animatedFadeIn and animatedFadeOut CSS classes.
 const FADE_DURATION_MS = 300;
 
@@ -177,7 +177,7 @@ export class VideoContainer extends LargeContainer {
      *
      */
     get video() {
-        return document.getElementById('largeVideo');
+        return document.getElementById(this.layoutId);
     }
 
     /**
@@ -191,9 +191,11 @@ export class VideoContainer extends LargeContainer {
      * Creates new VideoContainer instance.
      * @param resizeContainer {Function} function that takes care of the size
      * of the video container.
+     * @param layoutId
      */
-    constructor(resizeContainer) {
+    constructor(resizeContainer, layoutId) {
         super();
+        this.layoutId = layoutId
         this.stream = null;
         this.userId = null;
         this.videoType = null;
@@ -458,6 +460,7 @@ export class VideoContainer extends LargeContainer {
      * @param {string} videoType video type
      */
     setStream(userID, stream, videoType) {
+        console.log('[castis] VideoContainer setStream ' + this.layoutId + ' stream', stream)
         this.userId = userID;
         if (this.stream === stream && !stream?.forceStreamToReattach) {
             // Handles the use case for the remote participants when the
@@ -470,23 +473,23 @@ export class VideoContainer extends LargeContainer {
 
             return;
         }
-
+        console.log('[castis] VideoContainer setStream userID ' + this.layoutId + ' 1', userID)
         if (stream?.forceStreamToReattach) {
             delete stream.forceStreamToReattach;
         }
-
+        console.log('[castis] VideoContainer setStream userID ' + this.layoutId + ' 2', userID)
         // detach old stream
         if (this.stream && this.video) {
             this.stream.detach(this.video);
         }
-
+        console.log('[castis] VideoContainer setStream userID ' + this.layoutId + ' 3', stream)
         this.stream = stream;
         this.videoType = videoType;
 
         if (!stream) {
             return;
         }
-
+        console.log('[castis] VideoContainer setStream userID ' + this.layoutId + ' 4', this.video)
         if (this.video) {
             stream.attach(this.video);
 
@@ -498,6 +501,7 @@ export class VideoContainer extends LargeContainer {
 
             this.video.style.transform = flipX ? 'scaleX(-1)' : 'none';
             this._updateBackground();
+            console.log('[castis] VideoContainer setStream userID ' + this.layoutId + ' 5', userID)
         }
     }
 

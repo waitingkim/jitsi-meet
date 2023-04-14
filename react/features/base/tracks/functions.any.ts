@@ -229,6 +229,48 @@ export function getVideoTrackByParticipant(
 }
 
 /**
+ * Returns track of specified media type for specified participant.
+ *
+ * @param {IReduxState} state - The redux state.
+ * @param {IParticipant} participant - Participant Object.
+ * @returns {(Track|undefined)}
+ */
+export function getVideoTrackBySecond(
+    state: IReduxState,
+    participant?: IParticipant) {
+
+    if (!participant) {
+        return;
+    }
+
+    const tracks = state['features/base/tracks'];
+
+    if (isScreenShareParticipant(participant)) {
+        return getVirtualScreenshareParticipantTrack(tracks, participant.id);
+    }
+
+    return getTrackByMediaTypeAndSecond(tracks, MEDIA_TYPE.VIDEO, participant.id);
+}
+
+/**
+ * Returns track of specified media type for specified participant id.
+ *
+ * @param {ITrack[]} tracks - List of all tracks.
+ * @param {MediaType} mediaType - Media type.
+ * @param {string} participantId - Participant ID.
+ * @returns {(Track|undefined)}
+ */
+export function getTrackByMediaTypeAndSecond(
+        tracks: ITrack[],
+        mediaType: MediaType,
+        participantId?: string) {
+    // console.log('[castis] getTrackByMediaTypeAndParticipant tracks ', tracks)
+    return tracks.find(
+        t => Boolean(t.jitsiTrack) && !t.isMaster && t.mediaType === mediaType
+    );
+}
+
+/**
  * Returns track of specified media type for specified participant id.
  *
  * @param {ITrack[]} tracks - List of all tracks.
@@ -237,9 +279,9 @@ export function getVideoTrackByParticipant(
  * @returns {(Track|undefined)}
  */
 export function getTrackByMediaTypeAndParticipant(
-        tracks: ITrack[],
-        mediaType: MediaType,
-        participantId?: string) {
+    tracks: ITrack[],
+    mediaType: MediaType,
+    participantId?: string) {
     // console.log('[castis] getTrackByMediaTypeAndParticipant tracks ', tracks)
     return tracks.find(
         t => Boolean(t.jitsiTrack) && t.participantId === participantId && t.mediaType === mediaType

@@ -93,14 +93,16 @@ export function createLocalTracksF(options: ITrackOptions = {}, store?: IStore) 
                     micDeviceId,
                     resolution,
                     timeout
-                }).then(( track: any ) => {
-                    console.log('[castis] cameraDeviceId then secondLocalTracks1 isAlone :' + isAlone, track)
-
+                }).then(( tracks: any ) => {
+                console.log('[castis] cameraDeviceId then secondLocalTracks1 isAlone :' + isAlone, tracks)
                     if(isAlone) {
-                        return track
+                        // for (const tracksKey in tracks) {
+                        //     tracks[tracksKey].isMaster = true
+                        // }
+                        return tracks
                     } else {
                         // VIDOE track 가져와서 id를 넣어 줘야 함.
-                        cameraDeviceId = getUserSecondCameraDeviceId(state, track[1].deviceId)
+                        cameraDeviceId = getUserSecondCameraDeviceId(state, tracks[1].deviceId)
                         console.log('[castis] cameraDeviceId then getUserSecondCameraDeviceId(state)', cameraDeviceId)
                         return JitsiMeetJS.createLocalTracks({
                             cameraDeviceId,
@@ -117,14 +119,17 @@ export function createLocalTracksF(options: ITrackOptions = {}, store?: IStore) 
                             micDeviceId,
                             resolution,
                             timeout
-                        }).then((track2:any) => {
-                            console.log('[castis] cameraDeviceId then secondLocalTracks2 ', track2)
-
+                        }).then((track:any) => {
+                            console.log('[castis] cameraDeviceId then secondLocalTracks2 ', track)
+                            for (const tracksKey in track) {
+                                track[tracksKey].isMaster = false
+                            }
                             // tracks.map(track => {
                             //     return Promise.resolve();
                             // });
-
-                            return [track[0], track[1], track2[0]]
+                            tracks[0].isMaster = true
+                            tracks[1].isMaster = true
+                            return [tracks[0], tracks[1], track[0]]
                         })
                     }
 

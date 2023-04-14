@@ -451,7 +451,8 @@ export function trackAdded(track: any) {
                 participantId,
                 videoStarted: false,
                 videoType: track.videoType,
-                devicesId: track.deviceId
+                devicesId: track.deviceId,
+                isMaster : track.isMaster
             }
         }
         console.log('[castis] actions trackAdded jitsiTrack ', jitsiTrack)
