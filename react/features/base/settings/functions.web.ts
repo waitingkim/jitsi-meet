@@ -112,7 +112,7 @@ export function getUserSecondCameraDeviceId(stateful: IStateful, cameraDeviceId:
 export function isAloneSelectedCamera(stateful: IStateful) {
     const state = toState(stateful);
     const { videoInput } = state['features/base/devices'].availableDevices;
-    return (videoInput.length === 1)
+    return (videoInput?.length === 1 || false)
 }
 
 /**
@@ -259,8 +259,6 @@ function _getUserSelectedDeviceId(options: {
         return strippedDeviceLabel === strippedCandidateLabel;
     });
 
-    console.log('[castis] _getUserSelectedDeviceId foundMatchBasedOnLabel.deviceId 3 ', foundMatchBasedOnLabel.deviceId)
-    console.log('[castis] _getUserSelectedDeviceId foundMatchBasedOnLabel.deviceId 4 ', userSelectedDeviceId)
     return foundMatchBasedOnLabel
         ? foundMatchBasedOnLabel.deviceId : userSelectedDeviceId;
 }
@@ -289,7 +287,7 @@ function _getUserSecondDeviceId(options: {
     }
 
     const strippedDeviceLabel
-        = matchRegex ? userSelectedDeviceLabel.replace(matchRegex, replacement)
+        = matchRegex ? userSelectedDeviceLabel?.replace(matchRegex, replacement)
         : userSelectedDeviceLabel;
     const foundMatchBasedOnLabel = availableDevices?.find(candidate => {
         const { label } = candidate;

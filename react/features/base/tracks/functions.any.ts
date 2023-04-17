@@ -187,9 +187,18 @@ export function getLocalJitsiVideoTrack(state: IReduxState) {
 export function getLocalJitsiVideoTracks(state: IReduxState) {
     const tracks = getLocalVideoTracks(getTrackState(state));
     //console.log('[castis] getLocalJitsiVideoTracks track ', APP.store.getState()['features/base/tracks'])
-
     // return [track[0]?.jitsiTrack, track[1]?.jitsiTrack];
     return tracks
+}
+
+export function getLocalJitsiMainVideoTracks(state: IReduxState) {
+    const tracks = getLocalVideoTracks(getTrackState(state));
+    return getLocalMainTrackByType(tracks, MEDIA_TYPE.VIDEO)
+}
+
+export function getLocalJitsiSubVideoTracks(state: IReduxState) {
+    const tracks = getLocalVideoTracks(getTrackState(state));
+    return getLocalSubTrackByType(tracks, MEDIA_TYPE.VIDEO)
 }
 
 /**
@@ -220,7 +229,7 @@ export function getVideoTrackByParticipant(
     }
 
     const tracks = state['features/base/tracks'];
-
+    // console.log('[castis] getVideoTrackByParticipant tracks ===== ', tracks)
     if (isScreenShareParticipant(participant)) {
         return getVirtualScreenshareParticipantTrack(tracks, participant.id);
     }
@@ -233,23 +242,45 @@ export function getVideoTrackByParticipant(
  *
  * @param {IReduxState} state - The redux state.
  * @param {IParticipant} participant - Participant Object.
+ * @param isLocal
  * @returns {(Track|undefined)}
  */
-export function getVideoTrackBySecond(
-    state: IReduxState,
-    participant?: IParticipant) {
-
+export function getMainVideoTrack( state: IReduxState, participant?: IParticipant, isLocal?: boolean) {
     if (!participant) {
         return;
     }
-
     const tracks = state['features/base/tracks'];
-
     if (isScreenShareParticipant(participant)) {
         return getVirtualScreenshareParticipantTrack(tracks, participant.id);
     }
+    if(isLocal) {
+        return getLocalMainTrackByType(tracks, MEDIA_TYPE.VIDEO);
+    } else {
+        return getRemoteMainTrackByType(tracks, MEDIA_TYPE.VIDEO);
+    }
+}
 
-    return getTrackByMediaTypeAndSecond(tracks, MEDIA_TYPE.VIDEO, participant.id);
+/**
+ * Returns track of specified media type for specified participant.
+ *
+ * @param {IReduxState} state - The redux state.
+ * @param {IParticipant} participant - Participant Object.
+ * @param isLocal
+ * @returns {(Track|undefined)}
+ */
+export function getSubVideoTrack(state: IReduxState,participant?: IParticipant, isLocal?: boolean) {
+    if (!participant) {
+        return;
+    }
+    const tracks = state['features/base/tracks'];
+    if (isScreenShareParticipant(participant)) {
+        return getVirtualScreenshareParticipantTrack(tracks, participant.id);
+    }
+    if(isLocal) {
+        return getLocalSubTrackByType(tracks, MEDIA_TYPE.VIDEO);
+    } else {
+        return getRemoteSubTrackByType(tracks, MEDIA_TYPE.VIDEO);
+    }
 }
 
 /**
@@ -257,17 +288,62 @@ export function getVideoTrackBySecond(
  *
  * @param {ITrack[]} tracks - List of all tracks.
  * @param {MediaType} mediaType - Media type.
- * @param {string} participantId - Participant ID.
  * @returns {(Track|undefined)}
  */
-export function getTrackByMediaTypeAndSecond(
-        tracks: ITrack[],
-        mediaType: MediaType,
-        participantId?: string) {
-    // console.log('[castis] getTrackByMediaTypeAndParticipant tracks ', tracks)
+export function getLocalMainTrackByType(tracks: ITrack[], mediaType: MediaType) {
     return tracks.find(
-        t => Boolean(t.jitsiTrack) && !t.isMaster && t.mediaType === mediaType
+        t => Boolean(t.jitsiTrack) && t.local && t.isMaster  && t.mediaType === mediaType
     );
+}
+
+/**
+ * Returns track of specified media type for specified participant id.
+ *
+ * @param {ITrack[]} tracks - List of all tracks.
+ * @param {MediaType} mediaType - Media type.
+ * @returns {(Track|undefined)}
+ */
+export function getLocalSubTrackByType(tracks: ITrack[], mediaType: MediaType) {
+    return tracks.find(
+        t => Boolean(t.jitsiTrack) && t.local && !t.isMaster && t.mediaType === mediaType
+    );
+}
+
+/**
+ * Returns track of specified media type for specified participant id.
+ *
+ * @param {ITrack[]} tracks - List of all tracks.
+ * @param {MediaType} mediaType - Media type.
+ * @returns {(Track|undefined)}
+ */
+export function getRemoteMainTrackByType(tracks: ITrack[], mediaType: MediaType) {
+    let videoTracks = []
+    for (const tracksKey in tracks) {
+        if(!tracks[tracksKey].local && tracks[tracksKey].mediaType === mediaType){
+            videoTracks.push(tracks[tracksKey])
+        }
+    }
+    return videoTracks[0]
+}
+
+/**
+ * Returns track of specified media type for specified participant id.
+ *
+ * @param {ITrack[]} tracks - List of all tracks.
+ * @param {MediaType} mediaType - Media type.
+ * @returns {(Track|undefined)}
+ */
+export function getRemoteSubTrackByType(tracks: ITrack[], mediaType: MediaType) {
+    let videoTracks = []
+    for (const tracksKey in tracks) {
+        if(!tracks[tracksKey].local && tracks[tracksKey].mediaType === mediaType){
+            videoTracks.push(tracks[tracksKey])
+        }
+    }
+    if(videoTracks.length > 1)
+        return videoTracks[1]
+    else
+        return videoTracks[0]
 }
 
 /**

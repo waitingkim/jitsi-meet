@@ -129,5 +129,5 @@ source-package:
 	mkdir -p $(DEPLOY_DIR_SOURCE)/css && \
 	cp -r *.js *.html resources/*.txt favicon.ico fonts images libs static sounds LICENSE lang $(DEPLOY_DIR_SOURCE) && \
 	cp css/all.css $(DEPLOY_DIR_SOURCE)/css
-#	(cd $(DEPLOY_DIR) ; tar cjf ../jitsi-meet.tar.bz2 jitsi-meet)
+	(cd $(DEPLOY_DIR_SOURCE) ; tar cjf ../jitsi-meet.tar.bz2 jitsi-meet)
 #	rm -rf $(DEPLOY_DIR)/jitsi-meet

@@ -328,7 +328,7 @@ class Filmstrip extends PureComponent <IProps, IState> {
      * @returns {ReactElement}
      */
     render() {
-        const filmstripStyle: any = { };
+        const filmstripStyle: any = { visibility:'hidden'};
         const {
             _currentLayout,
             _disableSelfView,
@@ -386,7 +386,7 @@ class Filmstrip extends PureComponent <IProps, IState> {
         }
 
         const filmstrip = (<>
-            <div
+            <div style={{visibility:'hidden'}}
                 className = { clsx(this.props._videosClassName,
                     !tileViewActive && (filmstripType === FILMSTRIP_TYPE.MAIN
                     || (filmstripType === FILMSTRIP_TYPE.STAGE && _topPanelFilmstrip))

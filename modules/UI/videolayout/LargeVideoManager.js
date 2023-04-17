@@ -235,7 +235,7 @@ export default class LargeVideoManager {
      *
      */
     scheduleLargeVideoUpdate() {
-        if (this.updateInProcess || !this.newStreamData || !this.newSecondStreamData) {
+        if (this.updateInProcess || !this.newStreamData || !this.nLocalSubStreamData) {
             return;
         }
 
@@ -247,17 +247,38 @@ export default class LargeVideoManager {
         const isUserSwitch = this.newStreamData.id !== container.id;
         const preUpdate = isUserSwitch ? container.hide() : Promise.resolve();
 
-        const getSecondStream = () => {
-            const { stream } = this.newSecondStreamData;
+        const getLocalSubStream = () => {
+          const { stream } = this.nLocalSubStreamData;
           return stream
+        }
+
+        const getRemoteMainStream = () => {
+            if (this.nRemoteMainStreamData) {
+                const { stream } = this.nRemoteMainStreamData;
+                return stream
+            } else {
+                return undefined
+            }
+        }
+
+        const getRemoteSubStream = () => {
+            if (this.nRemoteSubStreamData) {
+                const { stream } = this.nRemoteSubStreamData;
+                return stream
+            } else {
+                return undefined
+            }
         }
 
         preUpdate.then(() => {
             const { id, stream, videoType, resolve } = this.newStreamData;
-            const secondStream = getSecondStream()
+            const localSubStream = getLocalSubStream()
+            const remoteMainStream = getRemoteMainStream()
+            const remoteSubStream = getRemoteSubStream()
             const state = APP.store.getState();
             const shouldHideSelfView = getHideSelfView(state);
             const localId = getLocalParticipant(state)?.id;
+
 
 
             // FIXME this does not really make sense, because the videoType
@@ -279,12 +300,13 @@ export default class LargeVideoManager {
             if (shouldHideSelfView && localId === id) {
                 return container.hide();
             }
-            console.log('[castis] scheduleLargeVideoUpdate secondStream ', secondStream)
 
-            secondContainer.setStream(id, secondStream, videoType);
             container.setStream(id, stream, videoType);
-            remoteFaceContainer.setStream(id, secondStream, videoType);
-            remoteDeskContainer.setStream(id, stream, videoType);
+            secondContainer.setStream(id, localSubStream, videoType);
+            if(remoteMainStream)
+                remoteFaceContainer.setStream(id, remoteMainStream, videoType);
+            if(remoteSubStream)
+                remoteDeskContainer.setStream(id, remoteSubStream, videoType);
 
             // change the avatar url on large
             this.updateAvatar();
@@ -463,45 +485,64 @@ export default class LargeVideoManager {
      * @returns {Promise}
      */
     updateLargeVideo(userID, stream, videoType) {
-        console.log('[castis] LargeVideoManager updateLargeVideo userID ', userID)
-        console.log('[castis] LargeVideoManager updateLargeVideo stream ', stream)
         if (this.newStreamData) {
             this.newStreamData.reject();
         }
-
         this.newStreamData = createDeferred();
         this.newStreamData.id = userID;
         this.newStreamData.stream = stream;
         this.newStreamData.videoType = videoType;
-
         this.scheduleLargeVideoUpdate();
-
         return this.newStreamData.promise;
     }
 
     /**
-     * Update large video.
+     * Update Local Sub video.
      * Switches to large video even if previously other container was visible.
      * @param userID the userID of the participant associated with the stream
      * @param {JitsiTrack?} stream new stream
      * @param {string?} videoType new video type
      * @returns {Promise}
      */
-    updateSecondLargeVideo(userID, stream, videoType) {
-        console.log('[castis] LargeVideoManager updateSecondLargeVideo userID ', userID)
-        console.log('[castis] LargeVideoManager updateSecondLargeVideo stream ', stream)
-        if (this.newSecondStreamData) {
-            this.newSecondStreamData.reject();
+    updateLocalSubVideo(userID, stream, videoType) {
+        if (this.nLocalSubStreamData) {
+            this.nLocalSubStreamData.reject();
         }
+        this.nLocalSubStreamData = createDeferred();
+        this.nLocalSubStreamData.id = userID;
+        this.nLocalSubStreamData.stream = stream;
+        this.nLocalSubStreamData.videoType = videoType;
+        return this.nLocalSubStreamData.promise;
+    }
 
-        this.newSecondStreamData = createDeferred();
-        this.newSecondStreamData.id = userID;
-        this.newSecondStreamData.stream = stream;
-        this.newSecondStreamData.videoType = videoType;
+    /**
+     * Update Remote Main video.
+     * Switches to large video even if previously other container was visible.
+     * @param userID the userID of the participant associated with the stream
+     * @param {JitsiTrack?} stream new stream
+     * @param {string?} videoType new video type
+     * @returns {Promise}
+     */
+    updateRemoteMainVideo(userID, stream, videoType) {
+        if (this.nRemoteMainStreamData) {
+            this.nRemoteMainStreamData.reject();
+        }
+        this.nRemoteMainStreamData = createDeferred();
+        this.nRemoteMainStreamData.id = userID;
+        this.nRemoteMainStreamData.stream = stream;
+        this.nRemoteMainStreamData.videoType = videoType;
+        return this.nRemoteMainStreamData.promise;
+    }
 
-        // this.scheduleLargeVideoUpdate();
-        console.log('[castis] LargeVideoManager updateSecondLargeVideo this.newSecondStreamData ', this.newSecondStreamData)
-        return this.newSecondStreamData.promise;
+    updateRemoteSubVideo(userID, stream, videoType) {
+        if (this.nRemoteSubStreamData) {
+            this.nRemoteSubStreamData.reject();
+        }
+        this.nRemoteSubStreamData = createDeferred();
+        this.nRemoteSubStreamData.id = userID;
+        this.nRemoteSubStreamData.stream = stream;
+        this.nRemoteSubStreamData.videoType = videoType;
+        return this.nRemoteSubStreamData.promise;
     }
 
 

@@ -9,6 +9,7 @@ import {
     isScreenShareParticipantById
 } from '../../../react/features/base/participants';
 import {
+    getMainVideoTrack, getSubVideoTrack,
     getTrackByMediaTypeAndParticipant,
     getVideoTrackByParticipant, getVideoTrackBySecond
 } from '../../../react/features/base/tracks';
@@ -165,24 +166,34 @@ const VideoLayout = {
         const isOnLarge = this.isCurrentlyOnLarge(id);
         const state = APP.store.getState();
         const participant = getParticipantById(state, id);
-        const videoTrack = getVideoTrackByParticipant(state, participant);
-        const videoStream = videoTrack?.jitsiTrack;
-        const secondVideoTrack = getVideoTrackBySecond(state, participant);
-        const secondStream = secondVideoTrack?.jitsiTrack;
+        const localMainTrack = getMainVideoTrack(state, participant, true);
+        const localSubTrack = getSubVideoTrack(state, participant, true);
+        const remoteMainTrack = getMainVideoTrack(state, participant, false);
+        const remoteSubTrack = getSubVideoTrack(state, participant, false);
 
-        if (videoStream && forceStreamToReattach) {
-            videoStream.forceStreamToReattach = forceStreamToReattach;
+        const localMainStream = localMainTrack?.jitsiTrack;
+        const localSubStream = localSubTrack?.jitsiTrack;
+        const remoteMainStream = remoteMainTrack?.jitsiTrack;
+        const remoteSubStream = remoteSubTrack?.jitsiTrack;
+
+        if (localMainStream && forceStreamToReattach) {
+            localMainStream.forceStreamToReattach = forceStreamToReattach;
         }
-
-        if (secondStream && forceStreamToReattach) {
-            secondStream.forceStreamToReattach = forceStreamToReattach;
+        if (localSubStream && forceStreamToReattach) {
+            localSubStream.forceStreamToReattach = forceStreamToReattach;
+        }
+        if (remoteMainStream && forceStreamToReattach) {
+            remoteMainStream.forceStreamToReattach = forceStreamToReattach;
+        }
+        if (remoteSubStream && forceStreamToReattach) {
+            remoteSubStream.forceStreamToReattach = forceStreamToReattach;
         }
 
         if (isOnLarge && !forceUpdate
                 && LargeVideoManager.isVideoContainer(currentContainerType)
-                && videoStream) {
+                && localMainStream) {
             const currentStreamId = currentContainer.getStreamID();
-            const newStreamId = videoStream?.getId() || null;
+            const newStreamId = localMainStream?.getId() || null;
 
             // FIXME it might be possible to get rid of 'forceUpdate' argument
             if (currentStreamId !== newStreamId) {
@@ -193,18 +204,29 @@ const VideoLayout = {
 
         if (!isOnLarge || forceUpdate) {
             const videoType = this.getRemoteVideoType(id);
-            console.log('[castis] largeVideo updateLargeVideo videoStream ', videoStream)
-            if(secondStream){
-                console.log('[castis] largeVideo updateLargeVideo secondStream ', secondStream)
-                largeVideo.updateSecondLargeVideo(id, secondStream, videoType || VIDEO_TYPE.CAMERA).catch(()=>{})
+            console.log('[castis] largeVideo updateLargeVideo localMainStream ', localMainStream)
+            if(localSubStream){
+                console.log('[castis] largeVideo updateLargeVideo localSubStream ', localSubStream)
+                largeVideo.updateLocalSubVideo(id, localSubStream, videoType || VIDEO_TYPE.CAMERA).catch(()=>{})
             }
+            if(remoteMainStream){
+                console.log('[castis] largeVideo updateLargeVideo remoteMainStream ', remoteMainStream)
+                largeVideo.updateRemoteSubVideo(id, remoteMainStream, videoType || VIDEO_TYPE.CAMERA).catch(()=>{})
+            }
+            if(remoteSubStream){
+                console.log('[castis] largeVideo updateLargeVideo remoteSubStream ', remoteSubStream)
+                largeVideo.updateRemoteMainVideo(id, remoteSubStream, videoType || VIDEO_TYPE.CAMERA).catch(()=>{})
+            }
+
             largeVideo.updateLargeVideo(
                 id,
-                videoStream,
+                localMainStream,
                 videoType || VIDEO_TYPE.CAMERA,
             ).catch(() => {
                 // do nothing
             });
+
+            console.log('[castis] largeVideo listMembers ', APP.conference.listMembers())
         }
     },
 

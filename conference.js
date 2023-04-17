@@ -1883,13 +1883,13 @@ export default {
         });
 
         room.on(JitsiConferenceEvents.TRACK_ADDED, track => {
-            console.log('[castis] JitsiConferenceEvents.TRACK_ADDED track ', track)
-            console.log('[castis] JitsiConferenceEvents.TRACK_ADDED track.isLocal() ', track.isLocal())
+            // console.log('[castis] JitsiConferenceEvents.TRACK_ADDED track ', track)
+            // console.log('[castis] JitsiConferenceEvents.TRACK_ADDED track.isLocal() ', track.isLocal())
             if (!track || track.isLocal()) {
                 return;
             }
 
-            console.log('[castis] JitsiConferenceEvents.TRACK_ADDED config.iAmRecorder ', config.iAmRecorder)
+            // console.log('[castis] JitsiConferenceEvents.TRACK_ADDED config.iAmRecorder ', config.iAmRecorder)
             if (config.iAmRecorder) {
                 const participant = room.getParticipantById(track.getParticipantId());
 

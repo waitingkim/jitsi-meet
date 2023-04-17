@@ -132,7 +132,7 @@ export function createDesiredLocalTracks(...desiredTypes: any) {
  * @returns {Function}
  */
 export function createLocalTracksA(options: ITrackOptions = {}) {
-    console.log('[castis] call createLocalTracksA options ', options)
+    // console.log('[castis] call createLocalTracksA options ', options)
     return (dispatch: IStore['dispatch'], getState: IStore['getState']) => {
         const devices
             = options.devices || [ MEDIA_TYPE.AUDIO, MEDIA_TYPE.VIDEO ];
@@ -186,7 +186,7 @@ export function createLocalTracksA(options: ITrackOptions = {}) {
                                 .then(() =>
                                     dispatch(_trackCreateCanceled(device as MediaType)));
                         }
-                        console.log('[castis] call createLocalTracksA localTracks ', localTracks)
+                        // console.log('[castis] call createLocalTracksA localTracks ', localTracks)
                         return dispatch(trackAdded(localTracks[0]));
                     },
                     (reason: Error) =>

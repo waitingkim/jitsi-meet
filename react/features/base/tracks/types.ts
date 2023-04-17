@@ -59,6 +59,7 @@ export interface ITrack {
     streamingStatus?: string;
     videoStarted: boolean;
     videoType?: string | null;
+    isMaster?:boolean
 }
 
 export interface IToggleScreenSharingOptions {

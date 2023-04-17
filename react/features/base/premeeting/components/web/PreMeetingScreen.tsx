@@ -15,6 +15,7 @@ import ConnectionStatus from './ConnectionStatus';
 // eslint-disable-next-line lines-around-comment
 // @ts-ignore
 import Preview from './Preview';
+import {ITrack} from '../../../tracks/types'
 
 interface IProps {
 
@@ -81,9 +82,9 @@ interface IProps {
     /**
      * The video track to render as preview (if omitted, the default local track will be rendered).
      */
-    videoTrack?: Object;
+    mainTrack?: ITrack;
 
-    videoTracks?: Object;
+    subTrack?: ITrack;
 }
 
 const useStyles = makeStyles()(theme => {
@@ -168,8 +169,8 @@ const PreMeetingScreen = ({
                               skipPrejoinButton,
                               title,
                               videoMuted,
-                              videoTrack,
-                              videoTracks
+                              mainTrack,
+                              subTrack
                           }: IProps) => {
     const { classes } = useStyles();
     const style = _premeetingBackground ? {
@@ -202,13 +203,11 @@ const PreMeetingScreen = ({
             </div>
             <Preview
                 videoMuted = { videoMuted }
-                videoTrack = { videoTracks[1]?.jitsiTrack }
-                videoTracks = { videoTracks }
+                videoTrack = { mainTrack?.jitsiTrack }
                 isMaster = {true}/>
             <Preview
                 videoMuted = { videoMuted }
-                videoTrack = { videoTracks[2]?.jitsiTrack  }
-                videoTracks = { videoTracks }
+                videoTrack = { subTrack?.jitsiTrack }
                 isMaster = {false}/>
         </div>
     );

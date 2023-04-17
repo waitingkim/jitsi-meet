@@ -95,6 +95,10 @@ export function createLocalTracksF(options: ITrackOptions = {}, store?: IStore) 
                     timeout
                 }).then(( tracks: any ) => {
                 console.log('[castis] cameraDeviceId then secondLocalTracks1 isAlone :' + isAlone, tracks)
+                    for (const tracksKey in tracks) {
+                        tracks[tracksKey].isMaster = true
+                    }
+
                     if(isAlone) {
                         // for (const tracksKey in tracks) {
                         //     tracks[tracksKey].isMaster = true
@@ -104,6 +108,7 @@ export function createLocalTracksF(options: ITrackOptions = {}, store?: IStore) 
                         // VIDOE track 가져와서 id를 넣어 줘야 함.
                         cameraDeviceId = getUserSecondCameraDeviceId(state, tracks[1].deviceId)
                         console.log('[castis] cameraDeviceId then getUserSecondCameraDeviceId(state)', cameraDeviceId)
+
                         return JitsiMeetJS.createLocalTracks({
                             cameraDeviceId,
                             constraints,
@@ -127,8 +132,8 @@ export function createLocalTracksF(options: ITrackOptions = {}, store?: IStore) 
                             // tracks.map(track => {
                             //     return Promise.resolve();
                             // });
-                            tracks[0].isMaster = true
-                            tracks[1].isMaster = true
+                            // tracks[0].isMaster = true
+                            // tracks[1].isMaster = true
                             return [tracks[0], tracks[1], track[0]]
                         })
                     }

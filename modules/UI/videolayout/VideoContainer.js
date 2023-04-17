@@ -476,23 +476,23 @@ export class VideoContainer extends LargeContainer {
 
             return;
         }
-        console.log('[castis] VideoContainer setStream userID ' + this.layoutId + ' 1', userID)
+        // console.log('[castis] VideoContainer setStream userID ' + this.layoutId + ' 1', userID)
         if (stream?.forceStreamToReattach) {
             delete stream.forceStreamToReattach;
         }
-        console.log('[castis] VideoContainer setStream userID ' + this.layoutId + ' 2', userID)
+        // console.log('[castis] VideoContainer setStream userID ' + this.layoutId + ' 2', userID)
         // detach old stream
         if (this.stream && this.video) {
             this.stream.detach(this.video);
         }
-        console.log('[castis] VideoContainer setStream userID ' + this.layoutId + ' 3', stream)
+        // console.log('[castis] VideoContainer setStream userID ' + this.layoutId + ' 3', stream)
         this.stream = stream;
         this.videoType = videoType;
 
         if (!stream) {
             return;
         }
-        console.log('[castis] VideoContainer setStream userID ' + this.layoutId + ' 4', this.video)
+        // console.log('[castis] VideoContainer setStream userID ' + this.layoutId + ' 4', this.video)
         if (this.video) {
             stream.attach(this.video);
 
@@ -504,7 +504,7 @@ export class VideoContainer extends LargeContainer {
 
             this.video.style.transform = flipX ? 'scaleX(-1)' : 'none';
             this._updateBackground();
-            console.log('[castis] VideoContainer setStream userID ' + this.layoutId + ' 5', userID)
+            // console.log('[castis] VideoContainer setStream userID ' + this.layoutId + ' 5', userID)
         }
     }
 
@@ -518,10 +518,8 @@ export class VideoContainer extends LargeContainer {
             return;
         }
         this.video.style.transform = this.localFlipX ? 'scaleX(-1)' : 'none';
-
         this._updateBackground();
     }
-
 
     /**
      * Check if current video stream is screen sharing.

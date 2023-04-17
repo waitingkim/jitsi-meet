@@ -38,8 +38,6 @@ export type Props = {
      */
     videoTrack: ?Object,
 
-    videoTracks: ?Object,
-
     isMaster: boolean
 };
 
@@ -50,7 +48,7 @@ export type Props = {
  * @returns {ReactElement}
  */
 function Preview(props: Props) {
-    const { _participantId, flipVideo, name, videoMuted, videoTrack, videoTracks, isMaster } = props;
+    const { _participantId, flipVideo, name, videoMuted, videoTrack, isMaster } = props;
     const className = flipVideo ? 'flipVideoX' : '';
 
     useEffect(() => {
@@ -63,8 +61,6 @@ function Preview(props: Props) {
         return () => APP.API.notifyPrejoinVideoVisibilityChanged(false);
     }, []);
 
-    // console.log('[castis] Preview videoTrack', videoTrack)
-    // console.log('[castis] Preview videoTracks', videoTracks)
 
     return (
         <div id = 'preview' style={isMaster?{width:'40%'}:{alignItems:'end'}}>

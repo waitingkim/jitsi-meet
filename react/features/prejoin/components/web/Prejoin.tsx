@@ -14,7 +14,11 @@ import ActionButton from '../../../base/premeeting/components/web/ActionButton';
 import PreMeetingScreen from '../../../base/premeeting/components/web/PreMeetingScreen';
 import { updateSettings } from '../../../base/settings/actions';
 import { getDisplayName } from '../../../base/settings/functions.web';
-import { getLocalJitsiVideoTracks, getLocalJitsiVideoTrack } from '../../../base/tracks/functions.web';
+import {
+    getLocalJitsiVideoTracks,
+    getLocalJitsiVideoTrack,
+    getLocalJitsiMainVideoTracks, getLocalJitsiSubVideoTracks
+} from '../../../base/tracks/functions.web'
 import Button from '../../../base/ui/components/web/Button';
 import Input from '../../../base/ui/components/web/Input';
 import { BUTTON_TYPES } from '../../../base/ui/constants.any';
@@ -33,6 +37,7 @@ import {
 
 // @ts-ignore
 import JoinByPhoneDialog from './dialogs/JoinByPhoneDialog';
+import {ITrack} from '../../../base/tracks/types'
 
 interface IProps extends WithTranslation {
 
@@ -114,9 +119,9 @@ interface IProps extends WithTranslation {
     /**
      * The JitsiLocalTrack to display.
      */
-    videoTrack?: Object;
+    mainTrack?: ITrack;
 
-    videoTracks?: Object;
+    subTrack?: ITrack;
 }
 
 interface IState {
@@ -325,8 +330,8 @@ class Prejoin extends Component<IProps, IState> {
             showDialog,
             showErrorOnJoin,
             t,
-            videoTrack,
-            videoTracks
+            mainTrack,
+            subTrack
         } = this.props;
         const { _closeDialog, _onDropdownClose, _onJoinButtonClick,
             _onOptionsClick, _setName, _onInputKeyPress } = this;
@@ -349,8 +354,8 @@ class Prejoin extends Component<IProps, IState> {
                 showDeviceStatus = { deviceStatusVisible }
                 title = { t('prejoin.joinMeeting') }
                 videoMuted = { !showCameraPreview }
-                videoTrack = { videoTrack }
-                videoTracks = { videoTracks }>
+                mainTrack = { mainTrack }
+                subTrack = { subTrack }>
                 <div
                     className = 'prejoin-input-area'
                     data-testid = 'prejoin.screen'>
@@ -447,8 +452,8 @@ function mapStateToProps(state: IReduxState) {
         showCameraPreview: !isVideoMutedByUser(state),
         showDialog: isJoinByPhoneDialogVisible(state),
         showErrorOnJoin,
-        videoTrack: getLocalJitsiVideoTrack(state),
-        videoTracks: getLocalJitsiVideoTracks(state)
+        mainTrack: getLocalJitsiMainVideoTracks(state),
+        subTrack: getLocalJitsiSubVideoTracks(state)
     };
 }
 

@@ -375,3 +375,135 @@
     white-space: nowrap;
     width: 100%;
 }
+
+.room_head_button_bg{
+    background-color: #03041F;
+}
+
+.room_head_button_bg.active{
+    background-color: #D3B57B;
+}
+
+.room_head_button_bg:hover div {
+    background-color: #FFFFFF;
+}
+
+.room_head_button_bg .room_head_button {
+    background-color: #656769;
+}
+
+.room_head_button_bg.active .room_head_button {
+    background-color: #FFFFFF;
+}
+
+.room_local_2 {
+    width: 50%;
+    height: 100%;
+}
+.room_local_2 .main {}
+.room_local_2 .main .video {
+    border-radius: 24px;
+    width: 95%;
+    background-color: #292B2C;
+}
+.room_local_2 .sub {}
+.room_local_2 .sub .video {
+    border-radius: 24px;
+    width: 48%;
+    margin-top: 2%;
+    background-color: #292B2C;
+}
+.room_remote_2 {
+    width: 50%;
+    height: 100%;
+}
+.room_remote_2 .main {}
+.room_remote_2 .main .video {
+    border-radius: 24px;
+    width: 48%;
+    background-color: #292B2C;
+}
+.room_remote_2 .sub {}
+.room_remote_2 .sub .video {
+    border-radius: 24px;
+    width: 95%;
+    margin-top: 2%;
+    background-color: #292B2C;
+}
+
+.room_local_1 {
+    width: 50%;
+    height: 100%;
+}
+.room_local_1 .main {}
+.room_local_1 .main .video {
+    border-radius: 24px;
+    width: 95%;
+    background-color: #292B2C;
+}
+.room_local_1 .sub {}
+.room_local_1 .sub .video {
+    border-radius: 24px;
+    width: 48%;
+    margin-top: 2%;
+    background-color: #292B2C;
+    visibility: hidden;
+}
+.room_remote_1 {
+    width: 50%;
+    height: 100%;
+}
+.room_remote_1 .main {}
+.room_remote_1 .main .video {
+    border-radius: 24px;
+    width: 48%;
+    background-color: #292B2C;
+}
+.room_remote_1 .sub {}
+.room_remote_1 .sub .video {
+    border-radius: 24px;
+    width: 95%;
+    margin-top: 2%;
+    background-color: #292B2C;
+}
+
+.room_local_0 {
+    width: 0%;
+    height: 100%;
+    visibility: hidden;
+}
+.room_local_0 .main {}
+.room_local_0 .main .video {
+    border-radius: 24px;
+    width: 48%;
+    background-color: #292B2C;
+}
+.room_local_0 .sub {}
+.room_local_0 .sub .video {
+    border-radius: 24px;
+    width: 95%;
+    margin-top: 2%;
+    background-color: #292B2C;
+}
+.room_remote_0 {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+.room_remote_0 .main {
+    width: 48%;
+}
+.room_remote_0 .main .video {
+    border-radius: 24px;
+    width: 90%;
+    background-color: #292B2C;
+}
+.room_remote_0 .sub {
+    width: 95%;
+}
+.room_remote_0 .sub .video {
+    border-radius: 24px;
+    width: 90%;
+    margin-top: 15%;
+    background-color: #292B2C;
+}

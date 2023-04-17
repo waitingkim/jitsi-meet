@@ -1062,7 +1062,7 @@ class Thumbnail extends Component<IProps, IState> {
         } else {
             videoEventListeners.onCanPlay = this._onCanPlay;
         }
-
+        styles.video.visibility = 'hidden'
         const video = _videoTrack && <VideoTrack
             className = { local ? videoTrackClassName : '' }
             eventHandlers = { videoEventListeners }

@@ -1,6 +1,8 @@
 // @flow
 
-import React, { Component } from 'react';
+import $ from 'jquery';
+import React, { Component, useCallback, useEffect, useState } from 'react';
+import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 
 import VideoLayout from '../../../../modules/UI/videolayout/VideoLayout';
@@ -15,6 +17,7 @@ import { FILMSTRIP_BREAKPOINT, isFilmstripResizable } from '../../filmstrip';
 import { getVerticalViewMaxWidth } from '../../filmstrip/functions.web';
 import { getLargeVideoParticipant } from '../../large-video/functions';
 import { SharedVideo } from '../../shared-video/components/web';
+import { updateStats } from '../../speaker-stats/actions.any';
 import { Captions } from '../../subtitles/';
 import { setTileView } from '../../video-layout/actions';
 import Whiteboard from '../../whiteboard/components/web/Whiteboard';
@@ -119,7 +122,7 @@ type Props = {
     /**
      * The Redux dispatch function.
      */
-    dispatch: Function
+    dispatch: Function;
 }
 
 /** .
@@ -199,6 +202,67 @@ class LargeVideo extends Component<Props> {
         } = this.props;
         const style = this._getCustomStyles();
         const className = `videocontainer${_isChatOpen ? ' shift-right' : ''}`;
+        const viewStyles = [
+            { // MODE 1
+                local:{
+                    div: { width: '50%', height:'100%' },
+                    line: {},
+                    video:[
+                        {borderRadius:'24px', width:'95%'},
+                        {borderRadius:'24px', width:'48%', marginTop:'2%'}
+                    ]
+                },
+                remote:{
+                    div: { width: '50%', height:'100%' },
+                    line: {},
+                    video:[
+                        {borderRadius:'24px', width:'48%', backgroundColor:'#292B2C'},
+                        {borderRadius:'24px', width:'95%', marginTop:'2%', backgroundColor:'#292B2C'}
+                    ]
+                }
+            },
+            { // MODE 2
+                local:{
+                    div: { width: '50%', height:'100%' },
+                    line: {},
+                    video:[
+                        {borderRadius:'24px', width:'95%'},
+                        {borderRadius:'24px', width:'48%', marginTop:'2%', visibility: 'hidden'}
+                    ]
+                },
+                remote:{
+                    div: { width: '50%', height:'100%' },
+                    line: {},
+                    video:[
+                        {borderRadius:'24px', width:'48%'},
+                        {borderRadius:'24px', width:'95%', marginTop:'2%'}
+                    ]
+                }
+            },
+            { // MODE 3
+                local:{
+                    div: { width: '0%', visibility: 'hidden' },
+                    line: {},
+                    video:[
+                        {borderRadius:'24px', width:'48%'},
+                        {borderRadius:'24px', width:'95%', marginTop:'2%'}
+                    ]
+                },
+                remote:{
+                    div: {display:'flex', height:'100%'},
+                    line: {width:'40%'},
+                    video:[
+                        {borderRadius:'24px', width:'90%'},
+                        {borderRadius:'24px', height:'25%', marginTop:'15%'}
+                    ]
+                }
+            }
+        ]
+        let selectStyle = viewStyles[0]
+
+        function onChangeView2(event) {
+            console.log('[castis] onChangeView event ', event)
+        }
 
         return (
             <div
@@ -238,163 +302,160 @@ class LargeVideo extends Component<Props> {
                         role = 'figure' >
                         { _displayScreenSharingPlaceholder ? <ScreenSharePlaceholder /> :
                             <div>
-                                <div style={{height:'80px', width:'100%', position:'absolute', top:'0px', backgroundColor:'#2D2D2D'}}>
-                                    <div className={'room_head_button'} style={{
+                                <div id={'room_head_buttons'} style={{height:'80px', width:'100%', position:'absolute', top:'0px', backgroundColor:'#2D2D2D'}}>
+                                    <div onClick={(e)=>{this.onChangeView({num:'0'}, e)}} className={'room_head_button_bg'} style={{
                                         boxSizing: 'border-box',
                                         width: '48px',
                                         height: '36px',
                                         left: '0px',
                                         top: '2px',
-                                        background: '#03041F',
                                         border: '1px solid #FFFFFF',
                                         borderRadius: '6px',
                                         float: 'right',
                                         marginTop: '22px',
                                         marginRight: '20px',
                                         position: 'relative'}}>
-                                        <div style={{
+                                        <div className={'room_head_button'} style={{
                                             width: '10.87px',
                                             height: '8.1px',
                                             left: '5.25px',
                                             top: '8.25px',
-                                            background: '#656769',
                                             borderRadius: '2px',
                                             position: 'absolute'
                                         }}/>
-                                        <div style={{
+                                        <div className={'room_head_button'} style={{
                                             width: '24.02px',
                                             height: '13.5px',
                                             left: '18.5px',
                                             top: '12.25px',
-                                            background: '#656769',
                                             borderRadius: '2px',
                                             position: 'absolute'
                                         }}/>
                                     </div>
-                                    <div style={{
+                                    <div onClick={(e)=>{this.onChangeView({num:'1'}, e)}} className={'room_head_button_bg'} style={{
                                         boxSizing: 'border-box',
                                         width: '48px',
                                         height: '36px',
                                         left: '0px',
                                         top: '2px',
-                                        background: '#03041F',
                                         border: '1px solid #FFFFFF',
                                         borderRadius: '6px',
                                         float: 'right',
                                         marginTop: '22px',
                                         marginRight: '16px',
                                         position: 'relative'}}>
-                                        <div style={{
+                                        <div className={'room_head_button'} style={{
                                             width: '19.02px',
                                             height: '10.8px',
                                             left: '6.25px',
                                             top: '5.3px',
-                                            background: '#656769',
                                             borderRadius: '2px',
                                             position: 'absolute'
                                         }}/>
-                                        <div style={{
+                                        <div className={'room_head_button'} style={{
                                             width: '10.87px',
                                             height: '8.1px',
                                             left: '29.34px',
                                             top: '5.3px',
-                                            background: '#656769',
                                             borderRadius: '2px',
                                             position: 'absolute'
                                         }}/>
-                                        <div style={{
+                                        <div className={'room_head_button'} style={{
                                             width: '19.02px',
                                             height: '10.8px',
                                             left: '22.19px',
                                             top: '18.45px',
-                                            background: '#656769',
                                             borderRadius: '2px',
                                             position: 'absolute'
                                         }}/>
                                     </div>
-                                    <div style={{
+                                    <div onClick={(e)=>{this.onChangeView({num:'2'}, e)}} className={'room_head_button_bg active'} style={{
                                         boxSizing: 'border-box',
                                         width: '48px',
                                         height: '36px',
                                         left: '0px',
                                         top: '2px',
-                                        background: '#03041F',
                                         border: '1px solid #FFFFFF',
                                         borderRadius: '6px',
                                         float: 'right',
                                         marginTop: '22px',
                                         marginRight: '16px',
                                         position: 'relative'}}>
-                                        <div style={{
+                                        <div className={'room_head_button'} style={{
                                             width: '19.02px',
                                             height: '10.8px',
                                             left: '6.25px',
                                             top: '5.3px',
-                                            background: '#656769',
                                             borderRadius: '2px',
                                             position: 'absolute'
                                         }}/>
-                                        <div style={{
+                                        <div className={'room_head_button'} style={{
                                             width: '10.87px',
                                             height: '8.1px',
                                             left: '29.34px',
                                             top: '5.3px',
-                                            background: '#656769',
                                             borderRadius: '2px',
                                             position: 'absolute'
                                         }}/>
-                                        <div style={{
+                                        <div className={'room_head_button'} style={{
                                             width: '10.87px',
                                             height: '8.1px',
                                             left: '6.25px',
                                             top: '21.15px',
-                                            background: '#656769',
                                             borderRadius: '2px',
                                             position: 'absolute'
                                         }}/>
-                                        <div style={{
+                                        <div className={'room_head_button'} style={{
                                             width: '19.02px',
                                             height: '10.8px',
                                             left: '22.19px',
                                             top: '18.45px',
-                                            background: '#656769',
                                             borderRadius: '2px',
                                             position: 'absolute'
                                         }}/>
                                     </div>
                                 </div>
-                                <div style={{marginTop:'95px', display: 'flex', alignItems: 'center'}}>
-                                    <div style={{width:'50%'}}>
-                                        <video
-                                            style={{borderRadius:'24px', width:'95%'}}
-                                            autoPlay = { !_noAutoPlayVideo }
-                                            id = 'largeVideo'
-                                            muted = { true }
-                                            playsInline = { true } /* for Safari on iOS to work */
-                                        />
-                                        <video
-                                            style={{borderRadius:'24px', marginTop:'2%', width:'48%'}}
-                                            autoPlay = { !_noAutoPlayVideo }
-                                            id = 'secondVideo'
-                                            muted = { true }
-                                            playsInline = { true } /* for Safari on iOS to work */
-                                        />
+                                <div id={'videoScreen'} style={{marginTop:'95px', display: 'flex', alignItems: 'center', height:'100%'}}>
+                                    <div className={'room_local_2'}>
+                                        <div className={'main'}>
+                                            <video
+                                                className={'video'}
+                                                autoPlay = { !_noAutoPlayVideo }
+                                                id = 'largeVideo'
+                                                muted = { true }
+                                                playsInline = { true } /* for Safari on iOS to work */
+                                            />
+                                        </div>
+                                        <div className={'sub'}>
+                                            <video
+                                                className={'video'}
+                                                autoPlay = { !_noAutoPlayVideo }
+                                                id = 'secondVideo'
+                                                muted = { true }
+                                                playsInline = { true } /* for Safari on iOS to work */
+                                            />
+                                        </div>
                                     </div>
-                                    <div style={{width:'50%'}}>
-                                        <video
-                                            style={{borderRadius:'24px', width:'48%'}}
-                                            autoPlay = { !_noAutoPlayVideo }
-                                            id = 'remoteFaceVideo'
-                                            muted = { true }
-                                            playsInline = { true } /* for Safari on iOS to work */
-                                        />
-                                        <video
-                                            style={{borderRadius:'24px', width:'95%', marginTop:'2%',}}
-                                            autoPlay = { !_noAutoPlayVideo }
-                                            id = 'remoteDeskVideo'
-                                            muted = { true }
-                                            playsInline = { true } /* for Safari on iOS to work */
-                                        />
+                                    <div className={'room_remote_2'}>
+                                        <div className={'main'}>
+                                            <video
+                                                className={'video'}
+                                                autoPlay = { !_noAutoPlayVideo }
+                                                id = 'remoteFaceVideo'
+                                                muted = { true }
+                                                playsInline = { true } /* for Safari on iOS to work */
+                                            />
+                                        </div>
+                                        <div className={'sub'}>
+                                            <video
+                                                className={'video'}
+                                                autoPlay = { !_noAutoPlayVideo }
+                                                id = 'remoteDeskVideo'
+                                                muted = { true }
+                                                playsInline = { true } /* for Safari on iOS to work */
+                                            />
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -432,6 +493,21 @@ class LargeVideo extends Component<Props> {
         } else {
             VideoLayout.refreshLayout();
         }
+    }
+
+
+    onChangeView(select, event) {
+        console.log('[castis] onChangeView event ', event)
+        console.log('[castis] onChangeView num ', select)
+        const videoScreen = $('#videoScreen');
+        const headButtons = $('#room_head_buttons').children('div');
+        videoScreen.children('div')[0].className = 'room_local_' + select.num
+        videoScreen.children('div')[1].className = 'room_remote_' + select.num
+        console.log('[castis] headButtons ', headButtons)
+        headButtons[0].className = 'room_head_button_bg'
+        headButtons[1].className = 'room_head_button_bg'
+        headButtons[2].className = 'room_head_button_bg'
+        headButtons[select.num].className = 'room_head_button_bg active'
     }
 
     _clearTapTimeout: () => void;
