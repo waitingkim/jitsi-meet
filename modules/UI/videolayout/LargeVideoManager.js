@@ -235,7 +235,8 @@ export default class LargeVideoManager {
      *
      */
     scheduleLargeVideoUpdate() {
-        if (this.updateInProcess || !this.newStreamData || !this.nLocalSubStreamData) {
+        console.log('[castis] scheduleLargeVideoUpdate')
+        if (this.updateInProcess || !this.newStreamData) {
             return;
         }
 
@@ -248,8 +249,12 @@ export default class LargeVideoManager {
         const preUpdate = isUserSwitch ? container.hide() : Promise.resolve();
 
         const getLocalSubStream = () => {
-          const { stream } = this.nLocalSubStreamData;
-          return stream
+            if (this.nLocalSubStreamData) {
+                const { stream } = this.nLocalSubStreamData;
+                return stream
+            } else {
+                return undefined
+            }
         }
 
         const getRemoteMainStream = () => {
@@ -271,6 +276,7 @@ export default class LargeVideoManager {
         }
 
         preUpdate.then(() => {
+            console.log('[castis] preUpdate')
             const { id, stream, videoType, resolve } = this.newStreamData;
             const localSubStream = getLocalSubStream()
             const remoteMainStream = getRemoteMainStream()
@@ -279,7 +285,7 @@ export default class LargeVideoManager {
             const shouldHideSelfView = getHideSelfView(state);
             const localId = getLocalParticipant(state)?.id;
 
-
+            console.log('[castis] preUpdate stream ', stream)
 
             // FIXME this does not really make sense, because the videoType
             // (camera or desktop) is a completely different thing than
@@ -296,6 +302,10 @@ export default class LargeVideoManager {
             const secondContainer = this.getSecondContainer();
             const remoteFaceContainer = this.getContainer(this.remoteFaceState);
             const remoteDeskContainer = this.getContainer(this.remoteDeskState);
+
+            console.log('[castis] preUpdate shouldHideSelfView ', shouldHideSelfView)
+            console.log('[castis] preUpdate id ', id)
+            console.log('[castis] preUpdate localId ', localId)
 
             if (shouldHideSelfView && localId === id) {
                 return container.hide();

@@ -193,11 +193,13 @@ export function getLocalJitsiVideoTracks(state: IReduxState) {
 
 export function getLocalJitsiMainVideoTracks(state: IReduxState) {
     const tracks = getLocalVideoTracks(getTrackState(state));
+    // console.log('[castis] getLocalJitsiMainVideoTracks tracks ', getLocalMainTrackByType(tracks, MEDIA_TYPE.VIDEO))
     return getLocalMainTrackByType(tracks, MEDIA_TYPE.VIDEO)
 }
 
 export function getLocalJitsiSubVideoTracks(state: IReduxState) {
     const tracks = getLocalVideoTracks(getTrackState(state));
+    // console.log('[castis] getLocalJitsiSubVideoTracks tracks ', getLocalSubTrackByType(tracks, MEDIA_TYPE.VIDEO))
     return getLocalSubTrackByType(tracks, MEDIA_TYPE.VIDEO)
 }
 

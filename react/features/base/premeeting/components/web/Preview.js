@@ -61,7 +61,7 @@ function Preview(props: Props) {
         return () => APP.API.notifyPrejoinVideoVisibilityChanged(false);
     }, []);
 
-
+    console.log('[castis] Preview videoTrack ', videoTrack)
     return (
         <div id = 'preview' style={isMaster?{width:'40%'}:{alignItems:'end'}}>
             {!videoMuted && videoTrack
