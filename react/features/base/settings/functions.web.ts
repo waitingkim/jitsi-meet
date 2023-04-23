@@ -46,8 +46,9 @@ function getDeviceIdByType(state: IReduxState, isType: string) {
         .map(t => t.jitsiTrack)
         .filter(t => t?.isLocal() && t[isType as keyof typeof t]())
         .map(t => t.getDeviceId());
-
-    return deviceId || '';
+    // console.log('[castis] getDeviceIdByType!!!! : ' + deviceId)
+    // console.log('[castis] getUserSelectedCameraDeviceId!!!! : ' + getUserSelectedCameraDeviceId(state))
+    return getUserSelectedCameraDeviceId(state) || '';
 }
 
 /**
@@ -78,7 +79,7 @@ export function getUserSelectedCameraDeviceId(stateful: IStateful) {
     // console.log('[castis] getUserSelectedCameraDeviceId state ', state)
 
     const { videoInput } = state['features/base/devices'].availableDevices;
-    console.log('[castis] getUserSelectedCameraDeviceId videoInput ', videoInput)
+    // console.log('[castis] getUserSelectedCameraDeviceId videoInput ', videoInput)
     return _getUserSelectedDeviceId({
         availableDevices: videoInput,
         // Operating systems may append " #{number}" somewhere in the label so
@@ -237,7 +238,7 @@ function _getUserSelectedDeviceId(options: {
 
     // Prioritize matching the deviceId
     if (foundMatchingBasedonDeviceId) {
-        console.log('[castis] _getUserSelectedDeviceId userSelectedDeviceId 2 ', userSelectedDeviceId)
+        // console.log('[castis] _getUserSelectedDeviceId userSelectedDeviceId 2 ', userSelectedDeviceId)
         return userSelectedDeviceId;
     }
 

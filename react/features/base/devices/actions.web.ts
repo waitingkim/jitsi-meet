@@ -277,13 +277,18 @@ export function setVideoInputDevice(deviceId: string) {
  * @returns {Function}
  */
 export function setVideoInputDeviceAndUpdateSettings(deviceId: string) {
+    console.log('[castis] setVideoInputDeviceAndUpdateSettings deviceId : ', deviceId)
     return function(dispatch: IStore['dispatch'], getState: IStore['getState']) {
         const deviceLabel = getDeviceLabelById(getState(), deviceId, 'videoInput');
 
+        console.log('[castis] deviceLabel : ', deviceLabel)
         dispatch(setVideoInputDevice(deviceId));
         dispatch(updateSettings({
             userSelectedCameraDeviceId: deviceId,
             userSelectedCameraDeviceLabel: deviceLabel
+        }));
+        dispatch(updateSettings({
+            cameraDeviceId: deviceId
         }));
     };
 }

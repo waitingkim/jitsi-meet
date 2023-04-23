@@ -12,6 +12,7 @@ import { IParticipant } from '../participants/types';
 
 import logger from './logger';
 import { ITrack } from './types';
+import {getUserSelectedCameraDeviceId} from '../settings'
 
 /**
  * Returns root tracks state.
@@ -194,13 +195,13 @@ export function getLocalJitsiVideoTracks(state: IReduxState) {
 export function getLocalJitsiMainVideoTracks(state: IReduxState) {
     const tracks = getLocalVideoTracks(getTrackState(state));
     // console.log('[castis] getLocalJitsiMainVideoTracks tracks ', getLocalMainTrackByType(tracks, MEDIA_TYPE.VIDEO))
-    return getLocalMainTrackByType(tracks, MEDIA_TYPE.VIDEO)
+    return getLocalMainTrackByType(state, tracks, MEDIA_TYPE.VIDEO)
 }
 
 export function getLocalJitsiSubVideoTracks(state: IReduxState) {
     const tracks = getLocalVideoTracks(getTrackState(state));
     // console.log('[castis] getLocalJitsiSubVideoTracks tracks ', getLocalSubTrackByType(tracks, MEDIA_TYPE.VIDEO))
-    return getLocalSubTrackByType(tracks, MEDIA_TYPE.VIDEO)
+    return getLocalSubTrackByType(state, tracks, MEDIA_TYPE.VIDEO)
 }
 
 /**
@@ -256,7 +257,7 @@ export function getMainVideoTrack( state: IReduxState, participant?: IParticipan
         return getVirtualScreenshareParticipantTrack(tracks, participant.id);
     }
     if(isLocal) {
-        return getLocalMainTrackByType(tracks, MEDIA_TYPE.VIDEO);
+        return getLocalMainTrackByType(state, tracks, MEDIA_TYPE.VIDEO);
     } else {
         return getRemoteMainTrackByType(tracks, MEDIA_TYPE.VIDEO);
     }
@@ -279,7 +280,7 @@ export function getSubVideoTrack(state: IReduxState,participant?: IParticipant, 
         return getVirtualScreenshareParticipantTrack(tracks, participant.id);
     }
     if(isLocal) {
-        return getLocalSubTrackByType(tracks, MEDIA_TYPE.VIDEO);
+        return getLocalSubTrackByType(state, tracks, MEDIA_TYPE.VIDEO);
     } else {
         return getRemoteSubTrackByType(tracks, MEDIA_TYPE.VIDEO);
     }
@@ -288,27 +289,39 @@ export function getSubVideoTrack(state: IReduxState,participant?: IParticipant, 
 /**
  * Returns track of specified media type for specified participant id.
  *
+ * @param state
  * @param {ITrack[]} tracks - List of all tracks.
  * @param {MediaType} mediaType - Media type.
  * @returns {(Track|undefined)}
  */
-export function getLocalMainTrackByType(tracks: ITrack[], mediaType: MediaType) {
+export function getLocalMainTrackByType(state: IReduxState, tracks: ITrack[], mediaType: MediaType) {
+    const userSelectedCameraDeviceId = getUserSelectedCameraDeviceId(state)
+    // console.log('[castis] getLocalMainTrackByType!! userSelectedCameraDeviceId ', userSelectedCameraDeviceId)
     return tracks.find(
-        t => Boolean(t.jitsiTrack) && t.local && t.isMaster  && t.mediaType === mediaType
+        t => Boolean(t.jitsiTrack) && t.local && Boolean(t.jitsiTrack.deviceId == userSelectedCameraDeviceId) && t.mediaType === mediaType
     );
 }
 
 /**
  * Returns track of specified media type for specified participant id.
  *
+ * @param state
  * @param {ITrack[]} tracks - List of all tracks.
  * @param {MediaType} mediaType - Media type.
  * @returns {(Track|undefined)}
  */
-export function getLocalSubTrackByType(tracks: ITrack[], mediaType: MediaType) {
-    return tracks.find(
-        t => Boolean(t.jitsiTrack) && t.local && !t.isMaster && t.mediaType === mediaType
+export function getLocalSubTrackByType(state: IReduxState, tracks: ITrack[], mediaType: MediaType) {
+    // console.log('[castis] getLocalSubTrackByType====== track size ', tracks)
+    const userSelectedCameraDeviceId = getUserSelectedCameraDeviceId(state)
+    const track = tracks.find(
+        t => Boolean(t.jitsiTrack) && t.local && Boolean(t.jitsiTrack.deviceId != userSelectedCameraDeviceId) && t.mediaType === mediaType
     );
+    // if(track) {
+    //     console.log('[castis] getLocalSubTrackByType====== track [' + userSelectedCameraDeviceId + '] ', track.jitsiTrack.deviceId)
+    // } else {
+    //     console.log('[castis] getLocalSubTrackByType====== track [' + userSelectedCameraDeviceId + '] ', track)
+    // }
+    return track
 }
 
 /**

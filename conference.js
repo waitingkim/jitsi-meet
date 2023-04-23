@@ -2203,7 +2203,7 @@ export default {
             UIEvents.VIDEO_DEVICE_CHANGED,
             cameraDeviceId => {
                 const videoWasMuted = this.isLocalVideoMuted();
-
+                console.log('[castis] UIEvents.VIDEO_DEVICE_CHANGED cameraDeviceId ', cameraDeviceId)
                 sendAnalytics(createDeviceChangedEvent('video', 'input'));
 
                 createLocalTracksF({
@@ -2222,7 +2222,6 @@ export default {
                 })
                 .then(stream => {
                     logger.info(`Switching the local video device to ${cameraDeviceId}.`);
-
                     return this.useVideoStream(stream);
                 })
                 .then(() => {
@@ -2356,6 +2355,7 @@ export default {
      * @returns {Promise}
      */
     _initDeviceList(setDeviceListChangeHandler = false) {
+        console.log('[castis] _initDeviceList==========')
         const { mediaDevices } = JitsiMeetJS;
 
         if (mediaDevices.isDeviceListAvailable()
@@ -2393,12 +2393,19 @@ export default {
      */
     _updateVideoDeviceId() {
         const localVideo = getLocalJitsiVideoTrack(APP.store.getState());
-
+        console.log('[castis] _updateVideoDeviceId!!!! : ' + localVideo.getDeviceId())
         if (localVideo && localVideo.videoType === 'camera') {
             APP.store.dispatch(updateSettings({
                 cameraDeviceId: localVideo.getDeviceId()
             }));
         }
+    },
+
+    _changeMainVideoDeviceId(deviceId:string) {
+        console.log('[castis] _changeMainVideoDeviceId!!!! : ' + deviceId)
+        APP.store.dispatch(updateSettings({
+            cameraDeviceId: deviceId
+        }));
     },
 
     /**

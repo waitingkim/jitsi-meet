@@ -14,6 +14,7 @@ import { ISettingsState } from './reducer';
  *         displayName: string,
  *         email: string,
  *         localFlipX: boolean,
+ *         localFlipY: boolean,
  *         micDeviceId: string,
  *         serverURL: string,
  *         soundsReactions: boolean,

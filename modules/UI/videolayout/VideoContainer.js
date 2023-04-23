@@ -518,7 +518,7 @@ export class VideoContainer extends LargeContainer {
             return;
         }
         this.video.style.transform = this.localFlipX ? 'scaleX(-1)' : 'none';
-        this._updateBackground();
+        // this._updateBackground();
     }
 
     /**

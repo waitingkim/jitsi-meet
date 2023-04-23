@@ -23,6 +23,8 @@ export type Props = {
      */
     flipVideo: boolean,
 
+    flipYVideo: boolean,
+
     /**
      * The name of the user that is about to join.
      */
@@ -48,8 +50,18 @@ export type Props = {
  * @returns {ReactElement}
  */
 function Preview(props: Props) {
-    const { _participantId, flipVideo, name, videoMuted, videoTrack, isMaster } = props;
-    const className = flipVideo ? 'flipVideoX' : '';
+    const { _participantId, flipVideo, flipYVideo, name, videoMuted, videoTrack, isMaster } = props;
+    let className = '';
+    if(flipVideo && flipYVideo) {
+        className = 'flipVideoXY';
+    } else if(flipVideo && !flipYVideo) {
+        className = 'flipVideoX';
+    } else if(!flipVideo && flipYVideo) {
+        className = 'flipVideoY';
+    }
+
+    console.log('[castis] Preview flipVideo ', flipVideo + ' / flipYVideo : ' + flipYVideo)
+    console.log('[castis] Preview className ', className)
 
     useEffect(() => {
         APP.API.notifyPrejoinVideoVisibilityChanged(Boolean(!videoMuted && videoTrack));
@@ -97,6 +109,7 @@ function _mapStateToProps(state, ownProps) {
     return {
         _participantId,
         flipVideo: state['features/base/settings'].localFlipX,
+        flipYVideo: state['features/base/settings'].localFlipY,
         name,
         videoMuted: ownProps.videoTrack ? ownProps.videoMuted : state['features/base/media'].video.muted,
         videoTrack: ownProps.videoTrack || (getLocalVideoTrack(state['features/base/tracks']) || {}).jitsiTrack

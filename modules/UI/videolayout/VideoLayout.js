@@ -201,7 +201,8 @@ const VideoLayout = {
                 forceUpdate = true; // eslint-disable-line no-param-reassign
             }
         }
-
+        console.log('[castis] updateLargeVideo isOnLarge ', isOnLarge)
+        console.log('[castis] updateLargeVideo forceUpdate ', forceUpdate)
         if (!isOnLarge || forceUpdate) {
             const videoType = this.getRemoteVideoType(id);
             console.log('[castis] largeVideo updateLargeVideo localMainStream ', localMainStream)
@@ -217,7 +218,7 @@ const VideoLayout = {
                 console.log('[castis] largeVideo updateLargeVideo remoteSubStream ', remoteSubStream)
                 largeVideo.updateRemoteMainVideo(id, remoteSubStream, videoType || VIDEO_TYPE.CAMERA).catch(()=>{})
             }
-
+            console.log('[castis] updateLargeVideo largeVideo.updateLargeVideo')
             largeVideo.updateLargeVideo(
                 id,
                 localMainStream,

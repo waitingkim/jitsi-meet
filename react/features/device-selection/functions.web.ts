@@ -151,6 +151,7 @@ export function processExternalDeviceRequest( // eslint-disable-line max-params
         getState: IStore['getState'],
         request: any,
         responseCallback: Function) {
+    console.log('[castis] processExternalDeviceRequest request ', request)
     if (request.type !== 'devices') {
         return false;
     }

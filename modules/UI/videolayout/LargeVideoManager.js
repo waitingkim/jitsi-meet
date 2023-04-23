@@ -495,9 +495,11 @@ export default class LargeVideoManager {
      * @returns {Promise}
      */
     updateLargeVideo(userID, stream, videoType) {
+        console.log('[castis] updateLargeVideo updateLargeVideo')
         if (this.newStreamData) {
             this.newStreamData.reject();
         }
+        console.log('[castis] updateLargeVideo updateLargeVideo2')
         this.newStreamData = createDeferred();
         this.newStreamData.id = userID;
         this.newStreamData.stream = stream;

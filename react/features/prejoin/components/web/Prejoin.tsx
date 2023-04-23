@@ -336,7 +336,7 @@ class Prejoin extends Component<IProps, IState> {
         const { _closeDialog, _onDropdownClose, _onJoinButtonClick,
             _onOptionsClick, _setName, _onInputKeyPress } = this;
 
-        //console.log('[castis] Prejoin render this.props ', this.props)
+        console.log('[castis] Prejoin render this.props ', this.props)
 
         const extraJoinButtons = this._getExtraJoinButtons();
         let extraButtonsToRender = Object.values(extraJoinButtons).filter((val: any) =>

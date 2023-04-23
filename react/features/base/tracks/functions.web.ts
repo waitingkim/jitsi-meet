@@ -106,7 +106,7 @@ export function createLocalTracksF(options: ITrackOptions = {}, store?: IStore) 
                         return tracks
                     } else {
                         // VIDOE track 가져와서 id를 넣어 줘야 함.
-                        cameraDeviceId = getUserSecondCameraDeviceId(state, tracks[1].deviceId)
+                        cameraDeviceId = getUserSecondCameraDeviceId(state, cameraDeviceId)
                         console.log('[castis] cameraDeviceId then getUserSecondCameraDeviceId(state)', cameraDeviceId)
 
                         return JitsiMeetJS.createLocalTracks({

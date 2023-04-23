@@ -184,7 +184,8 @@ MiddlewareRegistry.register(store => next => action => {
         break;
     case SET_VIDEO_INPUT_DEVICE:
         if (isPrejoinPageVisible(store.getState())) {
-            store.dispatch(replaceVideoTrackById(action.deviceId));
+            // 이미 모든 카메라(2대)의 스트림을 재생 중이기 때문에, replaceVideo는 의미가 없음.
+            //store.dispatch(replaceVideoTrackById(action.deviceId));
         } else {
             APP.UI.emitEvent(UIEvents.VIDEO_DEVICE_CHANGED, action.deviceId);
         }
