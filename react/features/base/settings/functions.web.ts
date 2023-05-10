@@ -66,8 +66,7 @@ export function getDisplayName(state: IReduxState): string {
  * label. Returns the stored preferred cameraDeviceId if a match is not found.
  *
  * @param {Object|Function} stateful - The redux state object or
- * {@code getState} function.
- * @returns {string}
+ * @returns {string|undefined}
  */
 export function getUserSelectedCameraDeviceId(stateful: IStateful) {
     const state = toState(stateful);
@@ -75,11 +74,7 @@ export function getUserSelectedCameraDeviceId(stateful: IStateful) {
         userSelectedCameraDeviceId,
         userSelectedCameraDeviceLabel
     } = state['features/base/settings'];
-
-    // console.log('[castis] getUserSelectedCameraDeviceId state ', state)
-
     const { videoInput } = state['features/base/devices'].availableDevices;
-    // console.log('[castis] getUserSelectedCameraDeviceId videoInput ', videoInput)
     return _getUserSelectedDeviceId({
         availableDevices: videoInput,
         // Operating systems may append " #{number}" somewhere in the label so
@@ -229,7 +224,7 @@ function _getUserSelectedDeviceId(options: {
     // If there is no label at all, there is no need to fall back to checking
     // the label for a fuzzy match.
     if (!userSelectedDeviceLabel || !userSelectedDeviceId) {
-        console.log('[castis] _getUserSelectedDeviceId userSelectedDeviceId 1 ', userSelectedDeviceId)
+        // console.log('[castis] _getUserSelectedDeviceId userSelectedDeviceId 1 ', userSelectedDeviceId)
         return userSelectedDeviceId;
     }
 

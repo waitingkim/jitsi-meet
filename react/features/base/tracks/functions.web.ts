@@ -50,8 +50,8 @@ export function createLocalTracksF(options: ITrackOptions = {}, store?: IStore) 
 
     const state = store.getState();
     const isAlone = isAloneSelectedCamera(state)
-    // const cameraDevices = getUserCameraDevices(state);
-
+    const cameraDevices = getUserCameraDevices(state);
+    console.log('[castis] createLocalTracksF cameraDevices ', cameraDevices)
     console.log('[castis] createLocalTracksF state ', state)
 
     // videoInput?: MediaDeviceInfo[];
@@ -76,6 +76,11 @@ export function createLocalTracksF(options: ITrackOptions = {}, store?: IStore) 
             // Filter any undefined values returned by Promise.resolve().
             const effects = effectsArray.filter(effect => Boolean(effect));
             console.log('[castis] cameraDeviceId cameraDeviceId ', cameraDeviceId)
+            if(cameraDevices) {
+                if (cameraDeviceId === undefined && cameraDevices.length > 0) {
+                    cameraDeviceId = cameraDevices[0].deviceId
+                }
+            }
 
             return JitsiMeetJS.createLocalTracks(
                 {
@@ -106,8 +111,10 @@ export function createLocalTracksF(options: ITrackOptions = {}, store?: IStore) 
                         return tracks
                     } else {
                         // VIDOE track 가져와서 id를 넣어 줘야 함.
-                        cameraDeviceId = getUserSecondCameraDeviceId(state, cameraDeviceId)
-                        console.log('[castis] cameraDeviceId then getUserSecondCameraDeviceId(state)', cameraDeviceId)
+                        if(cameraDeviceId) {
+                            cameraDeviceId = getUserSecondCameraDeviceId(state, cameraDeviceId)
+                            console.log('[castis] cameraDeviceId then getUserSecondCameraDeviceId(state)', cameraDeviceId)
+                        }
 
                         return JitsiMeetJS.createLocalTracks({
                             cameraDeviceId,

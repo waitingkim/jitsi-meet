@@ -25,7 +25,9 @@ const DEFAULT_STATE: ISettingsState = {
     displayName: undefined,
     email: undefined,
     localFlipX: true,
-    localFlipY: true,
+    localFlipY: 0,
+    localMainFlip: 'main flipVideoY0',
+    localSubFlip: 'sub flipVideoY0',
     maxStageParticipants: 1,
     micDeviceId: undefined,
     serverURL: undefined,
@@ -49,7 +51,11 @@ const DEFAULT_STATE: ISettingsState = {
         'notify.chatMessages': true
     },
     userSelectedMicDeviceLabel: undefined,
-    userSelectedSkipPrejoin: undefined
+    userSelectedSkipPrejoin: undefined,
+    roomLocalMainFlip: 'video flipVideoY0',
+    roomLocalSubFlip: 'video flipVideoY0',
+    roomRemoteMainFlip: 'video flipVideoY0',
+    roomRemoteSubFlip: 'video flipVideoY0',
 };
 
 export interface ISettingsState {
@@ -65,7 +71,9 @@ export interface ISettingsState {
     email?: string;
     hideShareAudioHelper?: boolean;
     localFlipX?: boolean;
-    localFlipY?: boolean,
+    localFlipY?: number,
+    localMainFlip?: string,
+    localSubFlip?: string,
     maxStageParticipants?: number;
     micDeviceId?: string | boolean;
     serverURL?: string;
@@ -91,6 +99,10 @@ export interface ISettingsState {
     userSelectedSkipPrejoin?: boolean;
     videoSettingsVisible?: boolean;
     visible?: boolean;
+    roomLocalMainFlip?: string;
+    roomLocalSubFlip?: string;
+    roomRemoteMainFlip?: string;
+    roomRemoteSubFlip?: string;
 }
 
 const STORE_NAME = 'features/base/settings';

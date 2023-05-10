@@ -28,8 +28,6 @@ export interface IProps extends WithTranslation {
      */
     changeFlip: (flip: boolean) => void;
 
-    changeFlipY: (flip: boolean) => void;
-
     /**
      * The deviceId of the camera device currently being used.
      */
@@ -39,8 +37,6 @@ export interface IProps extends WithTranslation {
      * Whether or not the local video is flipped.
      */
     localFlipX: boolean;
-
-    localFlipY: boolean;
 
     /**
      * Open virtual background dialog.
@@ -92,7 +88,6 @@ class VideoSettingsContent extends Component<IProps, State> {
     constructor(props: IProps) {
         super(props);
         this._onToggleFlip = this._onToggleFlip.bind(this);
-        this._onToggleFlipY = this._onToggleFlipY.bind(this);
 
         this.state = {
             trackData: new Array(props.videoDeviceIds.length).fill({
@@ -110,12 +105,6 @@ class VideoSettingsContent extends Component<IProps, State> {
         const { localFlipX, changeFlip } = this.props;
         console.log('[castis] _onToggleFlip ', localFlipX)
         changeFlip(!localFlipX);
-    }
-
-    _onToggleFlipY() {
-        const { localFlipY, changeFlipY } = this.props;
-        console.log('[castis] _onToggleFlipY ', localFlipY)
-        changeFlipY(!localFlipY);
     }
 
     /**
@@ -265,7 +254,7 @@ class VideoSettingsContent extends Component<IProps, State> {
      */
     render() {
         const { trackData } = this.state;
-        const { selectBackground, t, localFlipX, localFlipY } = this.props;
+        const { selectBackground, t, localFlipX } = this.props;
 
         return (
             <ContextMenu
@@ -293,15 +282,6 @@ class VideoSettingsContent extends Component<IProps, State> {
                             label = { t('videothumbnail.mirrorVideo') }
                             onChange = { this._onToggleFlip } />
                     </div>
-                    <div
-                        className = 'video-preview-checkbox-container'
-                        // eslint-disable-next-line react/jsx-no-bind
-                        onClick = { e => e.stopPropagation() }>
-                        <Checkbox
-                            checked = { localFlipY }
-                            label = { t('videothumbnail.upsideDown') }
-                            onChange = { this._onToggleFlipY } />
-                    </div>
                 </ContextMenuItemGroup>
             </ContextMenu>
         );
@@ -309,11 +289,10 @@ class VideoSettingsContent extends Component<IProps, State> {
 }
 
 const mapStateToProps = (state: IReduxState) => {
-    const { localFlipX, localFlipY } = state['features/base/settings'];
+    const { localFlipX} = state['features/base/settings'];
 
     return {
-        localFlipX: Boolean(localFlipX),
-        localFlipY: Boolean(localFlipY)
+        localFlipX: Boolean(localFlipX)
     };
 };
 
@@ -323,11 +302,6 @@ const mapDispatchToProps = (dispatch: IStore['dispatch']) => {
         changeFlip: (flip: boolean) => {
             dispatch(updateSettings({
                 localFlipX: flip
-            }));
-        },
-        changeFlipY: (flip: boolean) => {
-            dispatch(updateSettings({
-                localFlipY: flip
             }));
         }
     };

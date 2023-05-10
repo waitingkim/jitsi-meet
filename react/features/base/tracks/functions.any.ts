@@ -12,7 +12,7 @@ import { IParticipant } from '../participants/types';
 
 import logger from './logger';
 import { ITrack } from './types';
-import {getUserSelectedCameraDeviceId} from '../settings'
+import { getUserSelectedCameraDeviceId } from '../settings/functions.web';
 
 /**
  * Returns root tracks state.

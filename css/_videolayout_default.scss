@@ -58,12 +58,59 @@
     -o-transform: scale(-1, 1);
 }
 
-.flipVideoY {
+.main.flipVideoY0 {
+    transform: scale(1, 1);
+    -moz-transform: scale(1, 1);
+    -webkit-transform: scale(1, 1);
+    -o-transform: scale(1, 1);
+}
+
+.main.flipVideoY90 {
     transform: scale(1, -1);
     -moz-transform: scale(1, -1);
     -webkit-transform: scale(1, -1);
     -o-transform: scale(1, -1);
 }
+.main.flipVideoY180 {
+    transform: scale(-1, 1);
+    -moz-transform: scale(-1, 1);
+    -webkit-transform: scale(-1, 1);
+    -o-transform: scale(-1, 1);
+}
+.main.flipVideoY270 {
+    transform: scale(-1, -1);
+    -moz-transform: scale(-1, -1);
+    -webkit-transform: scale(-1, -1);
+    -o-transform: scale(-1, -1);
+}
+
+
+.sub.flipVideoY0 {
+    transform: scale(1, 1);
+    -moz-transform: scale(1, 1);
+    -webkit-transform: scale(1, 1);
+    -o-transform: scale(1, 1);
+}
+
+.sub.flipVideoY90 {
+    transform: scale(1, -1);
+    -moz-transform: scale(1, -1);
+    -webkit-transform: scale(1, -1);
+    -o-transform: scale(1, -1);
+}
+.sub.flipVideoY180 {
+    transform: scale(-1, 1);
+    -moz-transform: scale(-1, 1);
+    -webkit-transform: scale(-1, 1);
+    -o-transform: scale(-1, 1);
+}
+.sub.flipVideoY270 {
+    transform: scale(-1, -1);
+    -moz-transform: scale(-1, -1);
+    -webkit-transform: scale(-1, -1);
+    -o-transform: scale(-1, -1);
+}
+
 
 .flipVideoXY {
     transform: scale(-1, -1);
@@ -507,6 +554,7 @@
 .room_remote_0 .main {
     width: 48%;
 }
+
 .room_remote_0 .main .video {
     border-radius: 24px;
     width: 90%;
@@ -520,4 +568,122 @@
     width: 90%;
     margin-top: 15%;
     background-color: #292B2C;
+}
+
+
+.room_local_1 .main .video.flipVideoY0 {
+    transform: scale(1, 1); -moz-transform: scale(1, 1); -webkit-transform: scale(1, 1); -o-transform: scale(1, 1);
+}
+.room_local_1 .main .video.flipVideoY90 {
+    transform: scale(1, -1); -moz-transform: scale(1, -1); -webkit-transform: scale(1, -1); -o-transform: scale(1, -1);
+}
+.room_local_1 .main .video.flipVideoY180 {
+    transform: scale(-1, 1); -moz-transform: scale(-1, 1); -webkit-transform: scale(-1, 1); -o-transform: scale(-1, 1);
+}
+.room_local_1 .main .video.flipVideoY270 {
+    transform: scale(-1, -1); -moz-transform: scale(-1, -1); -webkit-transform: scale(-1, -1); -o-transform: scale(-1, -1);
+}
+
+.room_local_2 .main .video.flipVideoY0 {
+    transform: scale(1, 1); -moz-transform: scale(1, 1); -webkit-transform: scale(1, 1); -o-transform: scale(1, 1);
+}
+.room_local_2 .main .video.flipVideoY90 {
+    transform: scale(1, -1); -moz-transform: scale(1, -1); -webkit-transform: scale(1, -1); -o-transform: scale(1, -1);
+}
+.room_local_2 .main .video.flipVideoY180 {
+    transform: scale(-1, 1); -moz-transform: scale(-1, 1); -webkit-transform: scale(-1, 1); -o-transform: scale(-1, 1);
+}
+.room_local_2 .main .video.flipVideoY270 {
+    transform: scale(-1, -1); -moz-transform: scale(-1, -1); -webkit-transform: scale(-1, -1); -o-transform: scale(-1, -1);
+}
+
+.room_local_2 .sub .video.flipVideoY0 {
+    transform: scale(1, 1); -moz-transform: scale(1, 1); -webkit-transform: scale(1, 1); -o-transform: scale(1, 1);
+}
+.room_local_2 .sub .video.flipVideoY90 {
+    transform: scale(1, -1); -moz-transform: scale(1, -1); -webkit-transform: scale(1, -1); -o-transform: scale(1, -1);
+}
+.room_local_2 .sub .video.flipVideoY180 {
+    transform: scale(-1, 1); -moz-transform: scale(-1, 1); -webkit-transform: scale(-1, 1); -o-transform: scale(-1, 1);
+}
+.room_local_2 .sub .video.flipVideoY270 {
+    transform: scale(-1, -1); -moz-transform: scale(-1, -1); -webkit-transform: scale(-1, -1); -o-transform: scale(-1, -1);
+}
+
+.room_remote_0 .main .video.flipVideoY0 {
+    transform: scale(1, 1); -moz-transform: scale(1, 1); -webkit-transform: scale(1, 1); -o-transform: scale(1, 1);
+}
+.room_remote_0 .main .video.flipVideoY90 {
+    transform: scale(1, -1); -moz-transform: scale(1, -1); -webkit-transform: scale(1, -1); -o-transform: scale(1, -1);
+}
+.room_remote_0 .main .video.flipVideoY180 {
+    transform: scale(-1, 1); -moz-transform: scale(-1, 1); -webkit-transform: scale(-1, 1); -o-transform: scale(-1, 1);
+}
+.room_remote_0 .main .video.flipVideoY270 {
+    transform: scale(-1, -1); -moz-transform: scale(-1, -1); -webkit-transform: scale(-1, -1); -o-transform: scale(-1, -1);
+}
+
+.room_remote_0 .sub .video.flipVideoY0 {
+    transform: scale(1, 1); -moz-transform: scale(1, 1); -webkit-transform: scale(1, 1); -o-transform: scale(1, 1);
+}
+.room_remote_0 .sub .video.flipVideoY90 {
+    transform: scale(1, -1); -moz-transform: scale(1, -1); -webkit-transform: scale(1, -1); -o-transform: scale(1, -1);
+}
+.room_remote_0 .sub .video.flipVideoY180 {
+    transform: scale(-1, 1); -moz-transform: scale(-1, 1); -webkit-transform: scale(-1, 1); -o-transform: scale(-1, 1);
+}
+.room_remote_0 .sub .video.flipVideoY270 {
+    transform: scale(-1, -1); -moz-transform: scale(-1, -1); -webkit-transform: scale(-1, -1); -o-transform: scale(-1, -1);
+}
+
+.room_remote_1 .main .video.flipVideoY0 {
+    transform: scale(1, 1); -moz-transform: scale(1, 1); -webkit-transform: scale(1, 1); -o-transform: scale(1, 1);
+}
+.room_remote_1 .main .video.flipVideoY90 {
+    transform: scale(1, -1); -moz-transform: scale(1, -1); -webkit-transform: scale(1, -1); -o-transform: scale(1, -1);
+}
+.room_remote_1 .main .video.flipVideoY180 {
+    transform: scale(-1, 1); -moz-transform: scale(-1, 1); -webkit-transform: scale(-1, 1); -o-transform: scale(-1, 1);
+}
+.room_remote_1 .main .video.flipVideoY270 {
+    transform: scale(-1, -1); -moz-transform: scale(-1, -1); -webkit-transform: scale(-1, -1); -o-transform: scale(-1, -1);
+}
+
+.room_remote_1 .sub .video.flipVideoY0 {
+    transform: scale(1, 1); -moz-transform: scale(1, 1); -webkit-transform: scale(1, 1); -o-transform: scale(1, 1);
+}
+.room_remote_1 .sub .video.flipVideoY90 {
+    transform: scale(1, -1); -moz-transform: scale(1, -1); -webkit-transform: scale(1, -1); -o-transform: scale(1, -1);
+}
+.room_remote_1 .sub .video.flipVideoY180 {
+    transform: scale(-1, 1); -moz-transform: scale(-1, 1); -webkit-transform: scale(-1, 1); -o-transform: scale(-1, 1);
+}
+.room_remote_1 .sub .video.flipVideoY270 {
+    transform: scale(-1, -1); -moz-transform: scale(-1, -1); -webkit-transform: scale(-1, -1); -o-transform: scale(-1, -1);
+}
+
+.room_remote_2 .main .video.flipVideoY0 {
+    transform: scale(1, 1); -moz-transform: scale(1, 1); -webkit-transform: scale(1, 1); -o-transform: scale(1, 1);
+}
+.room_remote_2 .main .video.flipVideoY90 {
+    transform: scale(1, -1); -moz-transform: scale(1, -1); -webkit-transform: scale(1, -1); -o-transform: scale(1, -1);
+}
+.room_remote_2 .main .video.flipVideoY180 {
+    transform: scale(-1, 1); -moz-transform: scale(-1, 1); -webkit-transform: scale(-1, 1); -o-transform: scale(-1, 1);
+}
+.room_remote_2 .main .video.flipVideoY270 {
+    transform: scale(-1, -1); -moz-transform: scale(-1, -1); -webkit-transform: scale(-1, -1); -o-transform: scale(-1, -1);
+}
+
+.room_remote_2 .sub .video.flipVideoY0 {
+    transform: scale(1, 1); -moz-transform: scale(1, 1); -webkit-transform: scale(1, 1); -o-transform: scale(1, 1);
+}
+.room_remote_2 .sub .video.flipVideoY90 {
+    transform: scale(1, -1); -moz-transform: scale(1, -1); -webkit-transform: scale(1, -1); -o-transform: scale(1, -1);
+}
+.room_remote_2 .sub .video.flipVideoY180 {
+    transform: scale(-1, 1); -moz-transform: scale(-1, 1); -webkit-transform: scale(-1, 1); -o-transform: scale(-1, 1);
+}
+.room_remote_2 .sub .video.flipVideoY270 {
+    transform: scale(-1, -1); -moz-transform: scale(-1, -1); -webkit-transform: scale(-1, -1); -o-transform: scale(-1, -1);
 }

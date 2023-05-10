@@ -502,7 +502,7 @@ export class VideoContainer extends LargeContainer {
 
             const flipX = stream.isLocal() && this.localFlipX && !this.isScreenSharing();
 
-            this.video.style.transform = flipX ? 'scaleX(-1)' : 'none';
+            // this.video.style.transform = flipX ? 'scaleX(-1)' : 'none';
             this._updateBackground();
             // console.log('[castis] VideoContainer setStream userID ' + this.layoutId + ' 5', userID)
         }

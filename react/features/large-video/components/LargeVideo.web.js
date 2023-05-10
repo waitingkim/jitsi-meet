@@ -9,6 +9,7 @@ import VideoLayout from '../../../../modules/UI/videolayout/VideoLayout';
 import { VIDEO_TYPE } from '../../base/media';
 import { getLocalParticipant } from '../../base/participants';
 import { Watermarks } from '../../base/react';
+import { updateSettings } from '../../base/settings';
 import { getHideSelfView } from '../../base/settings/functions.any';
 import { getVideoTrackByParticipant } from '../../base/tracks';
 import { setColorAlpha } from '../../base/util';
@@ -123,6 +124,11 @@ type Props = {
      * The Redux dispatch function.
      */
     dispatch: Function;
+
+    _roomLocalMainFlip: string;
+    _roomLocalSubFlip: string;
+    _roomRemoteMainFlip: string;
+    _roomRemoteSubFlip: string;
 }
 
 /** .
@@ -152,6 +158,7 @@ class LargeVideo extends Component<Props> {
         this._clearTapTimeout = this._clearTapTimeout.bind(this);
         this._onDoubleTap = this._onDoubleTap.bind(this);
         this._updateLayout = this._updateLayout.bind(this);
+
     }
 
     /**
@@ -198,7 +205,11 @@ class LargeVideo extends Component<Props> {
             _isChatOpen,
             _noAutoPlayVideo,
             _showDominantSpeakerBadge,
-            _whiteboardEnabled
+            _whiteboardEnabled,
+            _roomLocalMainFlip,
+            _roomLocalSubFlip,
+            _roomRemoteMainFlip,
+            _roomRemoteSubFlip
         } = this.props;
         const style = this._getCustomStyles();
         const className = `videocontainer${_isChatOpen ? ' shift-right' : ''}`;
@@ -260,8 +271,50 @@ class LargeVideo extends Component<Props> {
         ]
         let selectStyle = viewStyles[0]
 
-        function onChangeView2(event) {
-            console.log('[castis] onChangeView event ', event)
+        function onChangeFlip(className) {
+            console.log('[castis] onChangeFlip event ', className)
+            let newClassName;
+            switch (className) {
+            case 'video flipVideoY0':
+                newClassName = 'video flipVideoY90';
+                break;
+            case 'video flipVideoY90':
+                newClassName = 'video flipVideoY180';
+                break;
+            case 'video flipVideoY180':
+                newClassName = 'video flipVideoY270';
+                break;
+            default:
+                newClassName = 'video flipVideoY0';
+                break;
+            }
+            return newClassName;
+        }
+
+        const onClickByLocalMain = (event) => {
+            console.log('[castis] onClickByLocalMain event ', event)
+            APP.store.dispatch(updateSettings({
+                roomLocalMainFlip: onChangeFlip(_roomLocalMainFlip)
+            }));
+        }
+        const onClickByLocalSub = (event) => {
+            console.log('[castis] onClickByLocalSub event ', event)
+            APP.store.dispatch(updateSettings({
+                roomLocalSubFlip: onChangeFlip(_roomLocalSubFlip)
+            }));
+        }
+        const onClickByRemoteMain = (event) => {
+            console.log('[castis] onClickByRemoteMain event ', event)
+            APP.store.dispatch(updateSettings({
+                roomRemoteMainFlip: onChangeFlip(_roomRemoteMainFlip)
+            }));
+        }
+
+        const onClickByRemoteSub = (event) => {
+            console.log('[castis] onClickByRemoteSub event ', event)
+            APP.store.dispatch(updateSettings({
+                roomRemoteSubFlip: onChangeFlip(_roomRemoteSubFlip)
+            }));
         }
 
         return (
@@ -303,6 +356,10 @@ class LargeVideo extends Component<Props> {
                         { _displayScreenSharingPlaceholder ? <ScreenSharePlaceholder /> :
                             <div>
                                 <div id={'room_head_buttons'} style={{height:'80px', width:'100%', position:'absolute', top:'0px', backgroundColor:'#2D2D2D'}}>
+                                    <span style={{position:'absolute', top:'0px', left:'14px', backgroundColor:'transparent'}}>
+                                        <img style={{width:'76px', height:'76px'}} src={'images/logo_ans.png'} alt={'Logo'}/>
+                                    </span>
+
                                     <div onClick={(e)=>{this.onChangeView({num:'0'}, e)}} className={'room_head_button_bg'} style={{
                                         boxSizing: 'border-box',
                                         width: '48px',
@@ -417,9 +474,25 @@ class LargeVideo extends Component<Props> {
                                 </div>
                                 <div id={'videoScreen'} style={{marginTop:'95px', display: 'flex', alignItems: 'center', height:'100%'}}>
                                     <div className={'room_local_2'}>
-                                        <div className={'main'}>
+                                        <div className={'main'} style={{width:'100%'}}>
+                                            <div
+                                                className={'toolbox-icon rotate_0'}
+                                                onClick = { onClickByLocalMain }
+                                                style={{
+                                                    float:'right',
+                                                    width:'30px',
+                                                    height:'30px',
+                                                    marginRight: '49px',
+                                                    position: 'absolute',
+                                                    marginLeft: '45%',
+                                                    marginTop: '10px',
+                                                    zIndex: '1'
+                                            }}
+                                            >
+                                                <img src={'images/rotate_right_black_48dp.png'} alt={'Rotate'}/>
+                                            </div>
                                             <video
-                                                className={'video'}
+                                                className={_roomLocalMainFlip}
                                                 autoPlay = { !_noAutoPlayVideo }
                                                 id = 'largeVideo'
                                                 muted = { true }
@@ -427,8 +500,24 @@ class LargeVideo extends Component<Props> {
                                             />
                                         </div>
                                         <div className={'sub'}>
+                                            <div
+                                                className={'toolbox-icon rotate_1'}
+                                                onClick = { onClickByLocalSub }
+                                                style={{
+                                                    float:'right',
+                                                    width:'30px',
+                                                    height:'30px',
+                                                    marginRight: '49px',
+                                                    position: 'absolute',
+                                                    marginLeft: '35%',
+                                                    marginTop: '25px',
+                                                    zIndex: '1'
+                                                }}
+                                            >
+                                                <img src={'images/rotate_right_black_48dp.png'} alt={'Rotate'}/>
+                                            </div>
                                             <video
-                                                className={'video'}
+                                                className={_roomLocalSubFlip}
                                                 autoPlay = { !_noAutoPlayVideo }
                                                 id = 'secondVideo'
                                                 muted = { true }
@@ -438,8 +527,24 @@ class LargeVideo extends Component<Props> {
                                     </div>
                                     <div className={'room_remote_2'}>
                                         <div className={'main'}>
+                                            <div
+                                                className={'toolbox-icon rotate_2'}
+                                                onClick = { onClickByRemoteMain }
+                                                style={{
+                                                    float:'right',
+                                                    width:'30px',
+                                                    height:'30px',
+                                                    marginRight: '49px',
+                                                    position: 'absolute',
+                                                    marginLeft: '34%',
+                                                    marginTop: '10px',
+                                                    zIndex: '1'
+                                                }}
+                                            >
+                                                <img src={'images/rotate_right_black_48dp.png'} alt={'Rotate'}/>
+                                            </div>
                                             <video
-                                                className={'video'}
+                                                className={_roomRemoteMainFlip}
                                                 autoPlay = { !_noAutoPlayVideo }
                                                 id = 'remoteFaceVideo'
                                                 muted = { true }
@@ -447,8 +552,24 @@ class LargeVideo extends Component<Props> {
                                             />
                                         </div>
                                         <div className={'sub'}>
+                                            <div
+                                                className={'toolbox-icon rotate_3'}
+                                                onClick = { onClickByRemoteSub }
+                                                style={{
+                                                    float:'right',
+                                                    width:'30px',
+                                                    height:'30px',
+                                                    marginRight: '49px',
+                                                    position: 'absolute',
+                                                    marginLeft: '46%',
+                                                    marginTop: '28px',
+                                                    zIndex: '1'
+                                                }}
+                                            >
+                                                <img src={'images/rotate_right_black_48dp.png'} alt={'Rotate'}/>
+                                            </div>
                                             <video
-                                                className={'video'}
+                                                className={_roomRemoteSubFlip}
                                                 autoPlay = { !_noAutoPlayVideo }
                                                 id = 'remoteDeskVideo'
                                                 muted = { true }
@@ -508,6 +629,28 @@ class LargeVideo extends Component<Props> {
         headButtons[1].className = 'room_head_button_bg'
         headButtons[2].className = 'room_head_button_bg'
         headButtons[select.num].className = 'room_head_button_bg active'
+
+        const rotate0 = $('.toolbox-icon.rotate_0');
+        const rotate1 = $('.toolbox-icon.rotate_1');
+        const rotate2 = $('.toolbox-icon.rotate_2');
+        const rotate3 = $('.toolbox-icon.rotate_3');
+        rotate0[0].style.visibility = 'visible';
+        rotate1[0].style.visibility = 'visible';
+        rotate2[0].style.visibility = 'visible';
+        rotate3[0].style.visibility = 'visible';
+
+        rotate2[0].style.marginLeft = '34%';
+        rotate3[0].style.marginTop = '28px';
+        rotate3[0].style.marginLeft = '46%';
+        if (select.num === '1') {
+            rotate1[0].style.visibility = 'hidden';
+        } else if (select.num === '0') {
+            rotate0[0].style.visibility = 'hidden';
+            rotate1[0].style.visibility = 'hidden';
+            rotate2[0].style.marginLeft = '29%';
+            rotate3[0].style.marginTop = '11%';
+            rotate3[0].style.marginLeft = '60%';
+        }
     }
 
     _clearTapTimeout: () => void;
@@ -602,7 +745,11 @@ function _mapStateToProps(state) {
     const isLocalScreenshareOnLargeVideo = largeVideoParticipant?.id?.includes(localParticipantId)
         && videoTrack?.videoType === VIDEO_TYPE.DESKTOP;
     const isOnSpot = defaultLocalDisplayName === SPOT_DISPLAY_NAME;
-    // console.log('[castis] LargeVideo videoTrack ', videoTrack)
+    const roomLocalMainFlip = state['features/base/settings'].roomLocalMainFlip;
+    const roomLocalSubFlip = state['features/base/settings'].roomLocalSubFlip;
+    const roomRemoteMainFlip = state['features/base/settings'].roomRemoteMainFlip;
+    const roomRemoteSubFlip = state['features/base/settings'].roomRemoteSubFlip;
+
     return {
         _backgroundAlpha: state['features/base/config'].backgroundAlpha,
         _customBackgroundColor: backgroundColor,
@@ -620,7 +767,11 @@ function _mapStateToProps(state) {
         _verticalFilmstripWidth: verticalFilmstripWidth.current,
         _verticalViewMaxWidth: getVerticalViewMaxWidth(state),
         _visibleFilmstrip: visible,
-        _whiteboardEnabled: isWhiteboardEnabled(state)
+        _whiteboardEnabled: isWhiteboardEnabled(state),
+        _roomLocalMainFlip: roomLocalMainFlip,
+        _roomLocalSubFlip: roomLocalSubFlip,
+        _roomRemoteMainFlip: roomRemoteMainFlip,
+        _roomRemoteSubFlip: roomRemoteSubFlip
     };
 }
 
