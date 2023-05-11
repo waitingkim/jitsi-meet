@@ -65,11 +65,12 @@ async function _startScreenSharing(dispatch: Function, state: IReduxState) {
 
         // The first time the user shares the screen we add the track and create the transceiver.
         // Afterwards, we just replace the old track, so the transceiver will be reused.
-        if (currentJitsiTrack) {
-            dispatch(replaceLocalTrack(currentJitsiTrack, track));
-        } else {
+        // 교체를 하지 않고, 추가만 하는 방향: 현재 보는 화면을 교체 하지 않고, 특정 뷰에서만 노출 하도록 처리 하기 위해
+        // if (currentJitsiTrack) {
+        //     dispatch(replaceLocalTrack(currentJitsiTrack, track));
+        // } else {
             dispatch(addLocalTrack(track));
-        }
+        // }
 
         dispatch(setVideoMuted(true, VIDEO_MUTISM_AUTHORITY.SCREEN_SHARE));
 

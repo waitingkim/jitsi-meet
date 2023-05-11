@@ -627,7 +627,7 @@ class LargeVideo extends Component<Props> {
                                                 <img src={'images/rotate_right_black_48dp.png'} alt={'Rotate'}/>
                                             </div>
                                             <div
-                                                className={'toolbox-icon rotate_0'}
+                                                className={'toolbox-icon rotate_3'}
                                                 onClick = { onChangeViewRemoteMain }
                                                 style={{
                                                     float:'right',
@@ -719,6 +719,8 @@ class LargeVideo extends Component<Props> {
         rotate2[0].style.marginLeft = '34%';
         rotate3[0].style.marginTop = '28px';
         rotate3[0].style.marginLeft = '46%';
+        rotate3[1].style.marginTop = '28px';
+        rotate3[1].style.marginLeft = '43.5%';
         if (select.num === '1') {
             rotate1[0].style.visibility = 'hidden';
         } else if (select.num === '0') {
@@ -727,6 +729,8 @@ class LargeVideo extends Component<Props> {
             rotate2[0].style.marginLeft = '29%';
             rotate3[0].style.marginTop = '11%';
             rotate3[0].style.marginLeft = '60%';
+            rotate3[1].style.marginTop = '11%';
+            rotate3[1].style.marginLeft = '57.5%';
         }
     }
 
