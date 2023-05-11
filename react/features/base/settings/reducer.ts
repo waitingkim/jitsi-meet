@@ -56,6 +56,8 @@ const DEFAULT_STATE: ISettingsState = {
     roomLocalSubFlip: 'video flipVideoY0',
     roomRemoteMainFlip: 'video flipVideoY0',
     roomRemoteSubFlip: 'video flipVideoY0',
+    localChangeView: true,
+    remoteChangeView: true
 };
 
 export interface ISettingsState {
@@ -103,6 +105,8 @@ export interface ISettingsState {
     roomLocalSubFlip?: string;
     roomRemoteMainFlip?: string;
     roomRemoteSubFlip?: string;
+    localChangeView?: boolean;
+    remoteChangeView?: boolean;
 }
 
 const STORE_NAME = 'features/base/settings';

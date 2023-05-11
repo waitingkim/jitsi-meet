@@ -65,7 +65,7 @@ function Preview(props: Props) {
         videoTrack,
         isMaster
     } = props;
-    const className =isMaster ? localMainFlip : localSubFlip
+    const className = isMaster ? localMainFlip : localSubFlip;
 
     console.log('[castis] Preview flipVideo ', flipVideo + ' / flipYVideo : ' + flipYVideo);
     console.log('[castis] Preview className ', className);
@@ -81,11 +81,11 @@ function Preview(props: Props) {
     }, []);
 
     const onClick = (x) => {
-        let flip = (flipYVideo === 270) ? 0 : flipYVideo + 90
+        let flip = (flipYVideo === 270) ? 0 : flipYVideo + 90;
         APP.store.dispatch(updateSettings({
             localFlipY: flip
         }));
-        if(isMaster){
+        if (isMaster) {
             APP.store.dispatch(updateSettings({
                 localMainFlip: 'main flipVideoY' + flip
             }));
@@ -94,47 +94,80 @@ function Preview(props: Props) {
                 localSubFlip: 'sub flipVideoY' + flip
             }));
         }
-    }
+    };
 
     const mainPreview = useMemo(() => {
         return (<div id="preview"
-             style={{ width: '70%', textAlign: 'center' }}>
+                     style={{
+                         width: '70%',
+                         textAlign: 'center'
+                     }}>
             {!videoMuted && videoTrack
                 ? (
-                    <div style={{position:'relative', width:'100%', marginTop:'5%'}}>
-                        <div style={{position:'absolute', width:'100%', height:'100%'}}>
+                    <div style={{
+                        position: 'relative',
+                        width: '100%',
+                        marginTop: '5%'
+                    }}>
+                        <div style={{
+                            position: 'absolute',
+                            width: '100%',
+                            height: '100%'
+                        }}>
                             <span style={{
                                 height: '30%',
                                 borderRadius: '24px',
                                 marginTop: '-2%',
                                 width: '90%'
                             }}>
-                                <span className={"button"} style={
+                                <div className={'button'} style={
                                     {
                                         position: 'relative',
                                         top: '1%',
                                         width: '93%',
                                         height: '30px',
                                         marginTop: '1%',
-                                        zIndex:'1'
+                                        zIndex: '1'
                                     }
-                                } > <div
-                                    className={'toolbox-icon'}
-                                    style={{float:'right', width:'30px', height:'30px', marginRight:'8%'}}
-                                    onClick = { onClick }
-                                >
-                                    <img style={{width:'100%', height:'100%'}} src={'images/rotate_right_black_48dp.png'} alt={'Rotate'}/>
+                                }>
                                 </div>
                             </span>
-                            </span>
                         </div>
-                        <div style={{position:'absolute', width:'100%', height:'100%', opacity:'0.7'}}>
+                        <div style={{
+                            position: 'absolute',
+                            width: '100%',
+                            height: '100%',
+                            opacity: '0.7',
+                            display: 'flex'
+                        }}>
+                            <div
+                                className={'toolbox-icon'}
+                                style={{
+                                    float: 'right',
+                                    width: '30px',
+                                    height: '30px',
+                                    zIndex: '1',
+                                    position: 'absolute',
+                                    borderRadius:'24px',
+                                    marginLeft:'30px'
+                                }}
+                                onClick={onClick}
+                            >
+                                <img style={
+                                    {
+                                        width: '100%',
+                                        height: '100%'
+                                    }}
+                                     src={'images/rotate_right_black_48dp.png'}
+                                     alt={'Rotate'}/>
+                            </div>
                             <Video
                                 style={{
                                     height: '60%',
                                     borderRadius: '24px',
                                     marginTop: '-2%',
-                                    width: '90%'
+                                    width: '90%',
+                                    marginLeft:'20px'
                                 }}
                                 className={className}
                                 id="prejoinVideo"
@@ -149,49 +182,97 @@ function Preview(props: Props) {
                         participantId={_participantId}
                         size={200}/>
                 )}
-        </div>)
-    }, [videoTrack, flipYVideo]);
+        </div>);
+    }, [ videoTrack, flipYVideo ]);
 
     const deskPreview = useMemo(() => {
         return (<div id="preview"
-                     style={{ width: '30%',alignItems:'center' }}>
+                     style={{
+                         width: '30%',
+                         alignItems: 'center'
+                     }}>
             {!videoMuted && videoTrack
                 ? (
-                    <div style={{position:'relative', width:'100%', height:'100%', marginTop:'0%'}}>
-                        <div style={{position:'absolute', width:'100%', height:'100%'}}>
+                    <div style={{
+                        position: 'relative',
+                        width: '100%',
+                        height: '100%',
+                        marginTop: '0%'
+                    }}>
+                        <div style={{
+                            position: 'absolute',
+                            width: '100%',
+                            height: '100%'
+                        }}>
                             <span style={{
                                 height: '30%',
                                 borderRadius: '24px',
                                 marginTop: '-2%',
                                 width: '90%'
                             }}>
-                                <span className={"button"} style={
+                                <span className={'button'} style={
                                     {
                                         position: 'relative',
                                         top: '1%',
                                         width: '93%',
                                         height: '30px',
                                         marginTop: '1%',
-                                        zIndex:'1'
+                                        zIndex: '1'
                                     }
-                                } > <div
-                                    className={'toolbox-icon'}
-                                    style={{float:'right', width:'30px', height:'30px', marginRight:'8%'}}
-                                    onClick = { onClick }
-                                >
-                                    <img style={{width:'100%', height:'100%'}} src={'images/rotate_right_black_48dp.png'} alt={'Rotate'}/>
-                                </div>
+                                }>
                             </span>
                             </span>
                         </div>
-                        <div style={{position:'absolute', width:'97%', height:'97%', opacity:'0.7', display:'flex', alignItems:'end'}}>
+                        <div style={{
+                            position: 'absolute',
+                            width: '97%',
+                            height: '97%',
+                            opacity: '0.7',
+                            display: 'flex',
+                            alignItems: 'end'
+                        }}>
+                            <div style={{
+                                display:'flex',
+                                position:'absolute',
+                                width:'100%',
+                                height:'100%'
+                            }}>
+                                <div style={{
+                                    width:'100%',
+                                    height:'69%',
+                                    position:"absolute",
+                                    alignItems:'end',
+                                    display:"flex",
+                                    zIndex:"1",
+                                }}>
+                            <div
+                                className={'toolbox-icon'}
+                                style={{
+                                    float: 'right',
+                                    width: '30px',
+                                    height: '30px',
+                                    opacity:'0.7',
+                                    borderRadius:"24px",
+                                    marginLeft:"6px"
+                                }}
+                                onClick={onClick}
+                            >
+                                <img style={{
+                                    width: '100%',
+                                    height: '100%'
+                                }}
+                                     src={'images/rotate_right_black_48dp.png'}
+                                     alt={'Rotate'}/>
+                            </div>
+                            </div>
+                            </div>
                             <Video
                                 style={{
                                     borderRadius: '24px',
                                     marginBottom: '2%',
                                     marginTop: '-2%',
                                     marginRight: '5%',
-                                    height: '33%',
+                                    height: '33%'
                                 }}
                                 className={className}
                                 id="prejoinVideo"
@@ -206,10 +287,10 @@ function Preview(props: Props) {
                         participantId={_participantId}
                         size={200}/>
                 )}
-        </div>)
-    }, [videoTrack, flipYVideo]);
+        </div>);
+    }, [ videoTrack, flipYVideo ]);
 
-    return  (isMaster ? mainPreview : deskPreview );
+    return (isMaster ? mainPreview : deskPreview);
 }
 
 /**

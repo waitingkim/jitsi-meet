@@ -158,7 +158,8 @@ class LargeVideo extends Component<Props> {
         this._clearTapTimeout = this._clearTapTimeout.bind(this);
         this._onDoubleTap = this._onDoubleTap.bind(this);
         this._updateLayout = this._updateLayout.bind(this);
-
+        this.isLocalChangeMain =  APP.store.getState()['features/base/settings'].localChangeView;
+        this.isRemoteChangeView =  APP.store.getState()['features/base/settings'].remoteChangeView;
     }
 
     /**
@@ -173,7 +174,12 @@ class LargeVideo extends Component<Props> {
             _seeWhatIsBeingShared,
             _largeVideoParticipantId,
             _hideSelfView,
-            _localParticipantId } = this.props;
+            _localParticipantId,
+            _localChangeView,
+            _remoteChangeView} = this.props;
+
+        console.log('[castis] this.isLocalChangeMain  ', this.isLocalChangeMain )
+        console.log('[castis] _localChangeView ', _localChangeView)
 
         if (prevProps._visibleFilmstrip !== _visibleFilmstrip) {
             this._updateLayout();
@@ -191,6 +197,16 @@ class LargeVideo extends Component<Props> {
             && prevProps._hideSelfView !== _hideSelfView) {
             VideoLayout.updateLargeVideo(_largeVideoParticipantId, true, false);
         }
+
+        if(this.isLocalChangeMain !== _localChangeView) {
+            this.isLocalChangeMain = _localChangeView;
+            VideoLayout.changeViewByLocal(_largeVideoParticipantId, _localChangeView, _remoteChangeView)
+        }
+        if(this.isRemoteChangeView !== _remoteChangeView) {
+            this.isRemoteChangeView = _remoteChangeView;
+            VideoLayout.changeViewByLocal(_largeVideoParticipantId, _localChangeView, _remoteChangeView)
+        }
+
     }
 
     /**
@@ -209,7 +225,9 @@ class LargeVideo extends Component<Props> {
             _roomLocalMainFlip,
             _roomLocalSubFlip,
             _roomRemoteMainFlip,
-            _roomRemoteSubFlip
+            _roomRemoteSubFlip,
+            _localChangeView,
+            _remoteChangeView
         } = this.props;
         const style = this._getCustomStyles();
         const className = `videocontainer${_isChatOpen ? ' shift-right' : ''}`;
@@ -289,6 +307,20 @@ class LargeVideo extends Component<Props> {
                 break;
             }
             return newClassName;
+        }
+
+        const onChangeViewLocalMain = (event) => {
+            console.log('[castis] onChangeViewLocalMain event ', event)
+            APP.store.dispatch(updateSettings({
+                localChangeView: !_localChangeView
+            }));
+        }
+
+        const onChangeViewRemoteMain = (event) => {
+            console.log('[castis] onChangeViewLocalMain event ', event)
+            APP.store.dispatch(updateSettings({
+                remoteChangeView: !_remoteChangeView
+            }));
         }
 
         const onClickByLocalMain = (event) => {
@@ -484,12 +516,32 @@ class LargeVideo extends Component<Props> {
                                                     height:'30px',
                                                     marginRight: '49px',
                                                     position: 'absolute',
-                                                    marginLeft: '45%',
+                                                    marginLeft: '46%',
                                                     marginTop: '10px',
-                                                    zIndex: '1'
+                                                    zIndex: '1',
+                                                    borderRadius:'24px',
+                                                    opacity:'0.7'
                                             }}
                                             >
                                                 <img src={'images/rotate_right_black_48dp.png'} alt={'Rotate'}/>
+                                            </div>
+                                            <div
+                                                className={'toolbox-icon rotate_0'}
+                                                onClick = { onChangeViewLocalMain }
+                                                style={{
+                                                    float:'right',
+                                                    width:'30px',
+                                                    height:'30px',
+                                                    marginRight: '49px',
+                                                    position: 'absolute',
+                                                    marginLeft: '43.5%',
+                                                    marginTop: '10px',
+                                                    zIndex: '1',
+                                                    borderRadius:'24px',
+                                                    opacity:'0.7'
+                                                }}
+                                            >
+                                                <img src={'images/baseline_wifi_protected_setup_black_48dp.png'} alt={'Rotate'}/>
                                             </div>
                                             <video
                                                 className={_roomLocalMainFlip}
@@ -511,7 +563,9 @@ class LargeVideo extends Component<Props> {
                                                     position: 'absolute',
                                                     marginLeft: '35%',
                                                     marginTop: '25px',
-                                                    zIndex: '1'
+                                                    zIndex: '1',
+                                                    borderRadius:'24px',
+                                                    opacity:'0.7'
                                                 }}
                                             >
                                                 <img src={'images/rotate_right_black_48dp.png'} alt={'Rotate'}/>
@@ -538,7 +592,9 @@ class LargeVideo extends Component<Props> {
                                                     position: 'absolute',
                                                     marginLeft: '34%',
                                                     marginTop: '10px',
-                                                    zIndex: '1'
+                                                    zIndex: '1',
+                                                    borderRadius:'24px',
+                                                    opacity:'0.7'
                                                 }}
                                             >
                                                 <img src={'images/rotate_right_black_48dp.png'} alt={'Rotate'}/>
@@ -563,10 +619,30 @@ class LargeVideo extends Component<Props> {
                                                     position: 'absolute',
                                                     marginLeft: '46%',
                                                     marginTop: '28px',
-                                                    zIndex: '1'
+                                                    zIndex: '1',
+                                                    borderRadius:'24px',
+                                                    opacity:'0.7'
                                                 }}
                                             >
                                                 <img src={'images/rotate_right_black_48dp.png'} alt={'Rotate'}/>
+                                            </div>
+                                            <div
+                                                className={'toolbox-icon rotate_0'}
+                                                onClick = { onChangeViewRemoteMain }
+                                                style={{
+                                                    float:'right',
+                                                    width:'30px',
+                                                    height:'30px',
+                                                    marginRight: '49px',
+                                                    position: 'absolute',
+                                                    marginLeft: '43.5%',
+                                                    marginTop: '28px',
+                                                    zIndex: '1',
+                                                    borderRadius:'24px',
+                                                    opacity:'0.7'
+                                                }}
+                                            >
+                                                <img src={'images/baseline_wifi_protected_setup_black_48dp.png'} alt={'Rotate'}/>
                                             </div>
                                             <video
                                                 className={_roomRemoteSubFlip}
@@ -634,6 +710,7 @@ class LargeVideo extends Component<Props> {
         const rotate1 = $('.toolbox-icon.rotate_1');
         const rotate2 = $('.toolbox-icon.rotate_2');
         const rotate3 = $('.toolbox-icon.rotate_3');
+
         rotate0[0].style.visibility = 'visible';
         rotate1[0].style.visibility = 'visible';
         rotate2[0].style.visibility = 'visible';
@@ -749,6 +826,8 @@ function _mapStateToProps(state) {
     const roomLocalSubFlip = state['features/base/settings'].roomLocalSubFlip;
     const roomRemoteMainFlip = state['features/base/settings'].roomRemoteMainFlip;
     const roomRemoteSubFlip = state['features/base/settings'].roomRemoteSubFlip;
+    const localChangeView = state['features/base/settings'].localChangeView;
+    const remoteChangeView = state['features/base/settings'].remoteChangeView;
 
     return {
         _backgroundAlpha: state['features/base/config'].backgroundAlpha,
@@ -771,7 +850,9 @@ function _mapStateToProps(state) {
         _roomLocalMainFlip: roomLocalMainFlip,
         _roomLocalSubFlip: roomLocalSubFlip,
         _roomRemoteMainFlip: roomRemoteMainFlip,
-        _roomRemoteSubFlip: roomRemoteSubFlip
+        _roomRemoteSubFlip: roomRemoteSubFlip,
+        _localChangeView: localChangeView,
+        _remoteChangeView: remoteChangeView
     };
 }
 

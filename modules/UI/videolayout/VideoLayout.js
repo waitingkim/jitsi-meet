@@ -156,8 +156,64 @@ const VideoLayout = {
         return largeVideo && largeVideo.id === id;
     },
 
+    changeViewByLocal(id, isChangeViewLocal, isChangeViewRemote) {
+        console.log('[castis] changeViewByLocal isChangeViewLocal ', isChangeViewLocal)
+        const state = APP.store.getState();
+        const participant = getParticipantById(state, id);
+        const localMainTrack = getMainVideoTrack(state, participant, true);
+        const localSubTrack = getSubVideoTrack(state, participant, true);
+        const remoteMainTrack = getMainVideoTrack(state, participant, false);
+        const remoteSubTrack = getSubVideoTrack(state, participant, false);
+
+        let localMainStream = localMainTrack?.jitsiTrack;
+        let localSubStream = localSubTrack?.jitsiTrack;
+        if (isChangeViewLocal) {
+            localMainStream = localSubTrack?.jitsiTrack;
+            localSubStream = localMainTrack?.jitsiTrack;
+        }
+        let remoteMainStream = remoteMainTrack?.jitsiTrack;
+        let remoteSubStream = remoteSubTrack?.jitsiTrack;
+        if (isChangeViewRemote) {
+            remoteMainStream = remoteSubTrack?.jitsiTrack;
+            remoteSubStream = remoteMainTrack?.jitsiTrack;
+        }
+
+        const videoType = this.getRemoteVideoType(id);
+        console.log('[castis] largeVideo updateLargeVideo localMainStream ', localMainStream);
+        if (localSubStream) {
+            console.log('[castis] largeVideo updateLargeVideo localSubStream ', localSubStream);
+            largeVideo.updateLocalSubVideo(id, localSubStream, videoType || VIDEO_TYPE.CAMERA)
+                .catch(() => {
+                });
+        }
+        if (remoteMainStream) {
+            console.log('[castis] largeVideo updateLargeVideo remoteMainStream ', remoteMainStream);
+            largeVideo.updateRemoteSubVideo(id, remoteMainStream, videoType || VIDEO_TYPE.CAMERA)
+                .catch(() => {
+                });
+        }
+        if (remoteSubStream) {
+            console.log('[castis] largeVideo updateLargeVideo remoteSubStream ', remoteSubStream);
+            largeVideo.updateRemoteMainVideo(id, remoteSubStream, videoType || VIDEO_TYPE.CAMERA)
+                .catch(() => {
+                });
+        }
+        console.log('[castis] updateLargeVideo largeVideo.updateLargeVideo');
+        largeVideo.updateLargeVideo(
+            id,
+            localMainStream,
+            videoType || VIDEO_TYPE.CAMERA
+        )
+            .catch(() => {
+                // do nothing
+            });
+
+        console.log('[castis] largeVideo listMembers ', APP.conference.listMembers());
+
+    },
+
     updateLargeVideo(id, forceUpdate, forceStreamToReattach = false) {
-        console.log('[castis] updateLargeVideo id ', id)
+        console.log('[castis] updateLargeVideo id ', id);
         if (!largeVideo) {
             return;
         }
@@ -190,8 +246,8 @@ const VideoLayout = {
         }
 
         if (isOnLarge && !forceUpdate
-                && LargeVideoManager.isVideoContainer(currentContainerType)
-                && localMainStream) {
+            && LargeVideoManager.isVideoContainer(currentContainerType)
+            && localMainStream) {
             const currentStreamId = currentContainer.getStreamID();
             const newStreamId = localMainStream?.getId() || null;
 
@@ -201,33 +257,40 @@ const VideoLayout = {
                 forceUpdate = true; // eslint-disable-line no-param-reassign
             }
         }
-        console.log('[castis] updateLargeVideo isOnLarge ', isOnLarge)
-        console.log('[castis] updateLargeVideo forceUpdate ', forceUpdate)
+        console.log('[castis] updateLargeVideo isOnLarge ', isOnLarge);
+        console.log('[castis] updateLargeVideo forceUpdate ', forceUpdate);
         if (!isOnLarge || forceUpdate) {
             const videoType = this.getRemoteVideoType(id);
-            console.log('[castis] largeVideo updateLargeVideo localMainStream ', localMainStream)
-            if(localSubStream){
-                console.log('[castis] largeVideo updateLargeVideo localSubStream ', localSubStream)
-                largeVideo.updateLocalSubVideo(id, localSubStream, videoType || VIDEO_TYPE.CAMERA).catch(()=>{})
+            console.log('[castis] largeVideo updateLargeVideo localMainStream ', localMainStream);
+            if (localSubStream) {
+                console.log('[castis] largeVideo updateLargeVideo localSubStream ', localSubStream);
+                largeVideo.updateLocalSubVideo(id, localSubStream, videoType || VIDEO_TYPE.CAMERA)
+                    .catch(() => {
+                    });
             }
-            if(remoteMainStream){
-                console.log('[castis] largeVideo updateLargeVideo remoteMainStream ', remoteMainStream)
-                largeVideo.updateRemoteSubVideo(id, remoteMainStream, videoType || VIDEO_TYPE.CAMERA).catch(()=>{})
+            if (remoteMainStream) {
+                console.log('[castis] largeVideo updateLargeVideo remoteMainStream ', remoteMainStream);
+                largeVideo.updateRemoteSubVideo(id, remoteMainStream, videoType || VIDEO_TYPE.CAMERA)
+                    .catch(() => {
+                    });
             }
-            if(remoteSubStream){
-                console.log('[castis] largeVideo updateLargeVideo remoteSubStream ', remoteSubStream)
-                largeVideo.updateRemoteMainVideo(id, remoteSubStream, videoType || VIDEO_TYPE.CAMERA).catch(()=>{})
+            if (remoteSubStream) {
+                console.log('[castis] largeVideo updateLargeVideo remoteSubStream ', remoteSubStream);
+                largeVideo.updateRemoteMainVideo(id, remoteSubStream, videoType || VIDEO_TYPE.CAMERA)
+                    .catch(() => {
+                    });
             }
-            console.log('[castis] updateLargeVideo largeVideo.updateLargeVideo')
+            console.log('[castis] updateLargeVideo largeVideo.updateLargeVideo');
             largeVideo.updateLargeVideo(
                 id,
                 localMainStream,
-                videoType || VIDEO_TYPE.CAMERA,
-            ).catch(() => {
-                // do nothing
-            });
+                videoType || VIDEO_TYPE.CAMERA
+            )
+                .catch(() => {
+                    // do nothing
+                });
 
-            console.log('[castis] largeVideo listMembers ', APP.conference.listMembers())
+            console.log('[castis] largeVideo listMembers ', APP.conference.listMembers());
         }
     },
 

@@ -7,9 +7,13 @@ import ReactDOM from 'react-dom';
 import { I18nextProvider } from 'react-i18next';
 import { Provider } from 'react-redux';
 
-import { createScreenSharingIssueEvent, sendAnalytics } from '../../../react/features/analytics';
+import {
+    createScreenSharingIssueEvent,
+    sendAnalytics
+} from '../../../react/features/analytics';
 import { Avatar } from '../../../react/features/base/avatar';
-import theme from '../../../react/features/base/components/themes/participantsPaneTheme.json';
+import theme
+    from '../../../react/features/base/components/themes/participantsPaneTheme.json';
 import { i18next } from '../../../react/features/base/i18n';
 import { JitsiTrackEvents } from '../../../react/features/base/lib-jitsi-meet';
 import { VIDEO_TYPE } from '../../../react/features/base/media';
@@ -20,7 +24,9 @@ import {
     isLocalScreenshareParticipant,
     isScreenShareParticipant
 } from '../../../react/features/base/participants';
-import { getHideSelfView } from '../../../react/features/base/settings/functions.any';
+import {
+    getHideSelfView
+} from '../../../react/features/base/settings/functions.any';
 import {
     getVideoTrackByParticipant,
     trackStreamingStatusChanged
@@ -31,12 +37,19 @@ import {
     isTrackStreamingStatusInactive,
     isTrackStreamingStatusInterrupted
 } from '../../../react/features/connection-indicator/functions';
-import { FILMSTRIP_BREAKPOINT } from '../../../react/features/filmstrip/constants';
-import { getVerticalViewMaxWidth, isFilmstripResizable } from '../../../react/features/filmstrip/functions';
+import {
+    FILMSTRIP_BREAKPOINT
+} from '../../../react/features/filmstrip/constants';
+import {
+    getVerticalViewMaxWidth,
+    isFilmstripResizable
+} from '../../../react/features/filmstrip/functions';
 import {
     updateKnownLargeVideoResolution
 } from '../../../react/features/large-video/actions';
-import { getParticipantsPaneOpen } from '../../../react/features/participants-pane/functions';
+import {
+    getParticipantsPaneOpen
+} from '../../../react/features/participants-pane/functions';
 import { PresenceLabel } from '../../../react/features/presence-status';
 import { shouldDisplayTileView } from '../../../react/features/video-layout';
 /* eslint-enable no-unused-vars */
@@ -61,6 +74,7 @@ const SECOND_DESKTOP_CONTAINER_TYPE = 'second_desktop';
  */
 export default class LargeVideoManager {
     _secondStream: null;
+
     /**
      * Checks whether given container is a {@link VIDEO_CONTAINER_TYPE}.
      * FIXME currently this is a workaround for the problem where video type is
@@ -235,7 +249,7 @@ export default class LargeVideoManager {
      *
      */
     scheduleLargeVideoUpdate() {
-        console.log('[castis] scheduleLargeVideoUpdate')
+        console.log('[castis] scheduleLargeVideoUpdate');
         if (this.updateInProcess || !this.newStreamData) {
             return;
         }
@@ -251,41 +265,47 @@ export default class LargeVideoManager {
         const getLocalSubStream = () => {
             if (this.nLocalSubStreamData) {
                 const { stream } = this.nLocalSubStreamData;
-                return stream
+                return stream;
             } else {
-                return undefined
+                return undefined;
             }
-        }
+        };
 
         const getRemoteMainStream = () => {
             if (this.nRemoteMainStreamData) {
                 const { stream } = this.nRemoteMainStreamData;
-                return stream
+                return stream;
             } else {
-                return undefined
+                return undefined;
             }
-        }
+        };
 
         const getRemoteSubStream = () => {
             if (this.nRemoteSubStreamData) {
                 const { stream } = this.nRemoteSubStreamData;
-                return stream
+                return stream;
             } else {
-                return undefined
+                return undefined;
             }
-        }
+        };
 
         preUpdate.then(() => {
-            console.log('[castis] preUpdate')
-            const { id, stream, videoType, resolve } = this.newStreamData;
-            const localSubStream = getLocalSubStream()
-            const remoteMainStream = getRemoteMainStream()
-            const remoteSubStream = getRemoteSubStream()
+            console.log('[castis] preUpdate');
+            const {
+                id,
+                stream,
+                videoType,
+                resolve
+            } = this.newStreamData;
+            const localSubStream = getLocalSubStream();
+            const remoteMainStream = getRemoteMainStream();
+            const remoteSubStream = getRemoteSubStream();
             const state = APP.store.getState();
             const shouldHideSelfView = getHideSelfView(state);
             const localId = getLocalParticipant(state)?.id;
 
-            console.log('[castis] preUpdate stream ', stream)
+
+            console.log('[castis] preUpdate stream ', stream);
 
             // FIXME this does not really make sense, because the videoType
             // (camera or desktop) is a completely different thing than
@@ -303,20 +323,26 @@ export default class LargeVideoManager {
             const remoteFaceContainer = this.getContainer(this.remoteFaceState);
             const remoteDeskContainer = this.getContainer(this.remoteDeskState);
 
-            console.log('[castis] preUpdate shouldHideSelfView ', shouldHideSelfView)
-            console.log('[castis] preUpdate id ', id)
-            console.log('[castis] preUpdate localId ', localId)
+            console.log('[castis] preUpdate shouldHideSelfView ', shouldHideSelfView);
+            console.log('[castis] preUpdate id ', id);
+            console.log('[castis] preUpdate localId ', localId);
 
             if (shouldHideSelfView && localId === id) {
                 return container.hide();
             }
 
-            container.setStream(id, stream, videoType);
-            secondContainer.setStream(id, localSubStream, videoType);
-            if(remoteMainStream)
+            const isLocalChangeView = state['features/base/settings'].localChangeView;
+            console.log('[castis] preUpdate localChangeView ', isLocalChangeView);
+
+                container.setStream(id, localSubStream, videoType);
+                secondContainer.setStream(id, stream, videoType);
+
+            if (remoteMainStream) {
                 remoteFaceContainer.setStream(id, remoteMainStream, videoType);
-            if(remoteSubStream)
+            }
+            if (remoteSubStream) {
                 remoteDeskContainer.setStream(id, remoteSubStream, videoType);
+            }
 
             // change the avatar url on large
             this.updateAvatar();
@@ -354,7 +380,7 @@ export default class LargeVideoManager {
                 );
 
             this.videoTrack?.jitsiTrack?.getVideoType() === VIDEO_TYPE.DESKTOP
-                && logger.debug(`Remote track ${videoTrack?.jitsiTrack}, isVideoMuted=${isVideoMuted},`
+            && logger.debug(`Remote track ${videoTrack?.jitsiTrack}, isVideoMuted=${isVideoMuted},`
                 + ` streamingStatusActive=${streamingStatusActive}, isVideoRenderable=${isVideoRenderable}`);
 
             const isAudioOnly = APP.conference.isAudioOnly();
@@ -367,7 +393,7 @@ export default class LargeVideoManager {
 
             const showAvatar
                 = isVideoContainer
-                    && ((isAudioOnly && videoType !== VIDEO_TYPE.DESKTOP) || !isVideoRenderable || legacyScreenshare);
+                && ((isAudioOnly && videoType !== VIDEO_TYPE.DESKTOP) || !isVideoRenderable || legacyScreenshare);
 
             let promise;
 
@@ -381,9 +407,9 @@ export default class LargeVideoManager {
                 promise = container.hide();
 
                 if ((!shouldDisplayTileView(state) || participant?.pinned) // In theory the tile view may not be
-                // enabled yet when we auto pin the participant.
+                    // enabled yet when we auto pin the participant.
 
-                        && participant && !participant.local && !participant.fakeParticipant) {
+                    && participant && !participant.local && !participant.fakeParticipant) {
                     // remote participant only
 
                     const track = getVideoTrackByParticipant(state, participant);
@@ -421,8 +447,8 @@ export default class LargeVideoManager {
             const overrideAndHide = APP.conference.isAudioOnly();
 
             this.updateParticipantConnStatusIndication(
-                    id,
-                    !overrideAndHide && messageKey);
+                id,
+                !overrideAndHide && messageKey);
 
             // Change the participant id the presence label is listening to.
             this.updatePresenceLabel(id);
@@ -433,12 +459,13 @@ export default class LargeVideoManager {
             promise.then(resolve);
 
             return promise;
-        }).then(() => {
-            // after everything is done check again if there are any pending
-            // new streams.
-            this.updateInProcess = false;
-            this.scheduleLargeVideoUpdate();
-        });
+        })
+            .then(() => {
+                // after everything is done check again if there are any pending
+                // new streams.
+                this.updateInProcess = false;
+                this.scheduleLargeVideoUpdate();
+            });
     }
 
     /**
@@ -495,11 +522,11 @@ export default class LargeVideoManager {
      * @returns {Promise}
      */
     updateLargeVideo(userID, stream, videoType) {
-        console.log('[castis] updateLargeVideo updateLargeVideo')
+        console.log('[castis] updateLargeVideo updateLargeVideo');
         if (this.newStreamData) {
             this.newStreamData.reject();
         }
-        console.log('[castis] updateLargeVideo updateLargeVideo2')
+        console.log('[castis] updateLargeVideo updateLargeVideo2');
         this.newStreamData = createDeferred();
         this.newStreamData.id = userID;
         this.newStreamData.stream = stream;
@@ -572,7 +599,10 @@ export default class LargeVideoManager {
         let widthToUse = this.preferredWidth || window.innerWidth;
         const state = APP.store.getState();
         const { isOpen } = state['features/chat'];
-        const { width: filmstripWidth, visible } = state['features/filmstrip'];
+        const {
+            width: filmstripWidth,
+            visible
+        } = state['features/filmstrip'];
         const isParticipantsPaneOpen = getParticipantsPaneOpen(state);
         const resizableFilmstrip = isFilmstripResizable(state);
 
@@ -596,13 +626,29 @@ export default class LargeVideoManager {
         this.height = this.preferredHeight || window.innerHeight;
     }
 
+    changeViewByLocal(id, stream1, stream2) {
+        // const container = this.getCurrentContainer();
+        // const secondContainer = this.getSecondContainer();
+        //
+        // container.setStream(id, stream1, VIDEO_TYPE.CAMERA);
+        // secondContainer.setStream(id, stream2, VIDEO_TYPE.CAMERA);
+
+    }
+
+    changeViewByRemote(id, stream1, stream2) {
+        const remoteFaceContainer = this.getContainer(this.remoteFaceState);
+        const remoteDeskContainer = this.getContainer(this.remoteDeskState);
+        remoteFaceContainer.setStream(id, stream1, VIDEO_TYPE.CAMERA);
+        remoteDeskContainer.setStream(id, stream2, VIDEO_TYPE.CAMERA);
+    }
+
     /**
      * Resize Large container of specified type.
      * @param {string} type type of container which should be resized.
      * @param {boolean} [animate=false] if resize process should be animated.
      */
     resizeContainer(type, animate = false) {
-        console.log('[castis] LargeVideoManager resizeContainer')
+        console.log('[castis] LargeVideoManager resizeContainer');
         // const container = this.getContainer(type);
         // container.resize(this.width, this.height, animate);
     }
@@ -612,7 +658,7 @@ export default class LargeVideoManager {
      * @param {boolean} animate if resize process should be animated.
      */
     resize(animate) {
-        console.log('[castis] LargeVideoManager resize')
+        console.log('[castis] LargeVideoManager resize');
         // resize all containers
         // Object.keys(this.containers)
         //     .forEach(type => this.resizeContainer(type, animate));
@@ -623,11 +669,11 @@ export default class LargeVideoManager {
      */
     updateAvatar() {
         ReactDOM.render(
-            <Provider store = { APP.store }>
+            <Provider store={APP.store}>
                 <Avatar
-                    id = "dominantSpeakerAvatar"
-                    participantId = { this.id }
-                    size = { 200 } />
+                    id="dominantSpeakerAvatar"
+                    participantId={this.id}
+                    size={200}/>
             </Provider>,
             this._dominantSpeakerAvatarContainer
         );
@@ -664,11 +710,11 @@ export default class LargeVideoManager {
 
         if (presenceLabelContainer) {
             ReactDOM.render(
-                <Provider store = { APP.store }>
-                    <I18nextProvider i18n = { i18next }>
+                <Provider store={APP.store}>
+                    <I18nextProvider i18n={i18next}>
                         <PresenceLabel
-                            participantID = { id }
-                            className = 'presence-label' />
+                            participantID={id}
+                            className="presence-label"/>
                     </I18nextProvider>
                 </Provider>,
                 presenceLabelContainer);
@@ -847,20 +893,21 @@ export default class LargeVideoManager {
         this.state = type;
         const container = this.getContainer(type);
 
-        return container.show().then(() => {
-            if (LargeVideoManager.isVideoContainer(type)) {
-                // FIXME when video appears on top of other content we need to
-                // show companion icons/messages. It would be best if
-                // the container would be taking care of it by itself, but that
-                // is a bigger refactoring
-                this.showWatermark(true);
+        return container.show()
+            .then(() => {
+                if (LargeVideoManager.isVideoContainer(type)) {
+                    // FIXME when video appears on top of other content we need to
+                    // show companion icons/messages. It would be best if
+                    // the container would be taking care of it by itself, but that
+                    // is a bigger refactoring
+                    this.showWatermark(true);
 
-                // "avatar" and "video connection" can not be displayed both
-                // at the same time, but the latter is of higher priority and it
-                // will hide the avatar one if will be displayed.
-                this.showRemoteConnectionMessage(/* fetch the current state */);
-            }
-        });
+                    // "avatar" and "video connection" can not be displayed both
+                    // at the same time, but the latter is of higher priority and it
+                    // will hide the avatar one if will be displayed.
+                    this.showRemoteConnectionMessage(/* fetch the current state */);
+                }
+            });
     }
 
     /**
@@ -879,7 +926,10 @@ export default class LargeVideoManager {
      * @returns {void}
      */
     _onVideoResolutionUpdate() {
-        const { height, width } = this.videoContainer.getStreamSize();
+        const {
+            height,
+            width
+        } = this.videoContainer.getStreamSize();
         const { resolution } = APP.store.getState()['features/large-video'];
 
         if (height !== resolution) {
